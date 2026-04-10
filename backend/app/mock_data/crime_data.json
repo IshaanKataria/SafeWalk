@@ -1,0 +1,1202 @@
+[
+  {
+    "lat": -37.923606,
+    "lng": 145.11525,
+    "type": "assault",
+    "severity": 3
+  },
+  {
+    "lat": -37.927551,
+    "lng": 145.116395,
+    "type": "theft",
+    "severity": 1
+  },
+  {
+    "lat": -37.923233,
+    "lng": 145.123922,
+    "type": "theft",
+    "severity": 1
+  },
+  {
+    "lat": -37.924095,
+    "lng": 145.115318,
+    "type": "theft",
+    "severity": 1
+  },
+  {
+    "lat": -37.927814,
+    "lng": 145.120054,
+    "type": "theft",
+    "severity": 2
+  },
+  {
+    "lat": -37.924388,
+    "lng": 145.12216,
+    "type": "vandalism",
+    "severity": 2
+  },
+  {
+    "lat": -37.925805,
+    "lng": 145.119492,
+    "type": "assault",
+    "severity": 3
+  },
+  {
+    "lat": -37.921906,
+    "lng": 145.115065,
+    "type": "theft",
+    "severity": 3
+  },
+  {
+    "lat": -37.923019,
+    "lng": 145.118403,
+    "type": "theft",
+    "severity": 3
+  },
+  {
+    "lat": -37.927847,
+    "lng": 145.122635,
+    "type": "theft",
+    "severity": 1
+  },
+  {
+    "lat": -37.929073,
+    "lng": 145.115967,
+    "type": "robbery",
+    "severity": 5
+  },
+  {
+    "lat": -37.923963,
+    "lng": 145.123071,
+    "type": "vandalism",
+    "severity": 1
+  },
+  {
+    "lat": -37.924638,
+    "lng": 145.124731,
+    "type": "robbery",
+    "severity": 4
+  },
+  {
+    "lat": -37.929212,
+    "lng": 145.117932,
+    "type": "harassment",
+    "severity": 2
+  },
+  {
+    "lat": -37.923815,
+    "lng": 145.123617,
+    "type": "harassment",
+    "severity": 3
+  },
+  {
+    "lat": -37.928077,
+    "lng": 145.115696,
+    "type": "harassment",
+    "severity": 2
+  },
+  {
+    "lat": -37.927721,
+    "lng": 145.117894,
+    "type": "theft",
+    "severity": 1
+  },
+  {
+    "lat": -37.921447,
+    "lng": 145.123665,
+    "type": "robbery",
+    "severity": 4
+  },
+  {
+    "lat": -37.92722,
+    "lng": 145.121357,
+    "type": "robbery",
+    "severity": 5
+  },
+  {
+    "lat": -37.928373,
+    "lng": 145.118553,
+    "type": "harassment",
+    "severity": 2
+  },
+  {
+    "lat": -37.92733,
+    "lng": 145.124367,
+    "type": "harassment",
+    "severity": 2
+  },
+  {
+    "lat": -37.929286,
+    "lng": 145.12135,
+    "type": "vandalism",
+    "severity": 2
+  },
+  {
+    "lat": -37.922709,
+    "lng": 145.116634,
+    "type": "robbery",
+    "severity": 4
+  },
+  {
+    "lat": -37.927301,
+    "lng": 145.124254,
+    "type": "vandalism",
+    "severity": 2
+  },
+  {
+    "lat": -37.927804,
+    "lng": 145.118243,
+    "type": "theft",
+    "severity": 2
+  },
+  {
+    "lat": -37.92771,
+    "lng": 145.115321,
+    "type": "robbery",
+    "severity": 5
+  },
+  {
+    "lat": -37.925988,
+    "lng": 145.115662,
+    "type": "harassment",
+    "severity": 3
+  },
+  {
+    "lat": -37.921236,
+    "lng": 145.118147,
+    "type": "harassment",
+    "severity": 2
+  },
+  {
+    "lat": -37.925008,
+    "lng": 145.123847,
+    "type": "harassment",
+    "severity": 2
+  },
+  {
+    "lat": -37.925411,
+    "lng": 145.117649,
+    "type": "assault",
+    "severity": 4
+  },
+  {
+    "lat": -37.92255,
+    "lng": 145.12039,
+    "type": "harassment",
+    "severity": 3
+  },
+  {
+    "lat": -37.925716,
+    "lng": 145.120835,
+    "type": "robbery",
+    "severity": 5
+  },
+  {
+    "lat": -37.927807,
+    "lng": 145.124975,
+    "type": "vandalism",
+    "severity": 2
+  },
+  {
+    "lat": -37.925065,
+    "lng": 145.122558,
+    "type": "theft",
+    "severity": 1
+  },
+  {
+    "lat": -37.928472,
+    "lng": 145.1166,
+    "type": "harassment",
+    "severity": 2
+  },
+  {
+    "lat": -37.925778,
+    "lng": 145.115635,
+    "type": "robbery",
+    "severity": 4
+  },
+  {
+    "lat": -37.924041,
+    "lng": 145.11968,
+    "type": "assault",
+    "severity": 3
+  },
+  {
+    "lat": -37.920289,
+    "lng": 145.123608,
+    "type": "theft",
+    "severity": 2
+  },
+  {
+    "lat": -37.923197,
+    "lng": 145.116146,
+    "type": "vandalism",
+    "severity": 2
+  },
+  {
+    "lat": -37.922491,
+    "lng": 145.122686,
+    "type": "robbery",
+    "severity": 5
+  },
+  {
+    "lat": -37.928884,
+    "lng": 145.119348,
+    "type": "vandalism",
+    "severity": 1
+  },
+  {
+    "lat": -37.929968,
+    "lng": 145.122221,
+    "type": "assault",
+    "severity": 3
+  },
+  {
+    "lat": -37.920281,
+    "lng": 145.12262,
+    "type": "vandalism",
+    "severity": 2
+  },
+  {
+    "lat": -37.920874,
+    "lng": 145.123705,
+    "type": "assault",
+    "severity": 3
+  },
+  {
+    "lat": -37.921583,
+    "lng": 145.120077,
+    "type": "assault",
+    "severity": 4
+  },
+  {
+    "lat": -37.928472,
+    "lng": 145.122625,
+    "type": "vandalism",
+    "severity": 2
+  },
+  {
+    "lat": -37.920465,
+    "lng": 145.124224,
+    "type": "theft",
+    "severity": 2
+  },
+  {
+    "lat": -37.924011,
+    "lng": 145.119886,
+    "type": "theft",
+    "severity": 1
+  },
+  {
+    "lat": -37.920709,
+    "lng": 145.123787,
+    "type": "assault",
+    "severity": 3
+  },
+  {
+    "lat": -37.927605,
+    "lng": 145.117409,
+    "type": "harassment",
+    "severity": 3
+  },
+  {
+    "lat": -37.920531,
+    "lng": 145.115857,
+    "type": "vandalism",
+    "severity": 1
+  },
+  {
+    "lat": -37.92184,
+    "lng": 145.12478,
+    "type": "vandalism",
+    "severity": 2
+  },
+  {
+    "lat": -37.922342,
+    "lng": 145.116284,
+    "type": "vandalism",
+    "severity": 1
+  },
+  {
+    "lat": -37.920532,
+    "lng": 145.116651,
+    "type": "vandalism",
+    "severity": 2
+  },
+  {
+    "lat": -37.921276,
+    "lng": 145.119231,
+    "type": "assault",
+    "severity": 4
+  },
+  {
+    "lat": -37.920711,
+    "lng": 145.122553,
+    "type": "assault",
+    "severity": 4
+  },
+  {
+    "lat": -37.922871,
+    "lng": 145.11899,
+    "type": "harassment",
+    "severity": 2
+  },
+  {
+    "lat": -37.923501,
+    "lng": 145.119381,
+    "type": "vandalism",
+    "severity": 2
+  },
+  {
+    "lat": -37.925485,
+    "lng": 145.117479,
+    "type": "theft",
+    "severity": 1
+  },
+  {
+    "lat": -37.926619,
+    "lng": 145.120883,
+    "type": "assault",
+    "severity": 4
+  },
+  {
+    "lat": -37.898585,
+    "lng": 145.122115,
+    "type": "harassment",
+    "severity": 2
+  },
+  {
+    "lat": -37.907058,
+    "lng": 145.123078,
+    "type": "theft",
+    "severity": 2
+  },
+  {
+    "lat": -37.894246,
+    "lng": 145.123134,
+    "type": "assault",
+    "severity": 4
+  },
+  {
+    "lat": -37.903544,
+    "lng": 145.129767,
+    "type": "vandalism",
+    "severity": 2
+  },
+  {
+    "lat": -37.905883,
+    "lng": 145.136968,
+    "type": "harassment",
+    "severity": 3
+  },
+  {
+    "lat": -37.898781,
+    "lng": 145.125888,
+    "type": "vandalism",
+    "severity": 1
+  },
+  {
+    "lat": -37.89508,
+    "lng": 145.125047,
+    "type": "theft",
+    "severity": 1
+  },
+  {
+    "lat": -37.897456,
+    "lng": 145.127669,
+    "type": "robbery",
+    "severity": 4
+  },
+  {
+    "lat": -37.900528,
+    "lng": 145.133665,
+    "type": "harassment",
+    "severity": 2
+  },
+  {
+    "lat": -37.897545,
+    "lng": 145.132339,
+    "type": "theft",
+    "severity": 2
+  },
+  {
+    "lat": -37.901558,
+    "lng": 145.127429,
+    "type": "theft",
+    "severity": 1
+  },
+  {
+    "lat": -37.904021,
+    "lng": 145.125043,
+    "type": "vandalism",
+    "severity": 1
+  },
+  {
+    "lat": -37.905757,
+    "lng": 145.124936,
+    "type": "vandalism",
+    "severity": 1
+  },
+  {
+    "lat": -37.904003,
+    "lng": 145.136772,
+    "type": "vandalism",
+    "severity": 1
+  },
+  {
+    "lat": -37.895072,
+    "lng": 145.135695,
+    "type": "theft",
+    "severity": 1
+  },
+  {
+    "lat": -37.907191,
+    "lng": 145.137989,
+    "type": "theft",
+    "severity": 2
+  },
+  {
+    "lat": -37.892496,
+    "lng": 145.136822,
+    "type": "assault",
+    "severity": 4
+  },
+  {
+    "lat": -37.905339,
+    "lng": 145.12977,
+    "type": "assault",
+    "severity": 4
+  },
+  {
+    "lat": -37.894166,
+    "lng": 145.136439,
+    "type": "theft",
+    "severity": 3
+  },
+  {
+    "lat": -37.901936,
+    "lng": 145.137765,
+    "type": "assault",
+    "severity": 3
+  },
+  {
+    "lat": -37.893176,
+    "lng": 145.134562,
+    "type": "assault",
+    "severity": 3
+  },
+  {
+    "lat": -37.901232,
+    "lng": 145.137317,
+    "type": "vandalism",
+    "severity": 2
+  },
+  {
+    "lat": -37.89741,
+    "lng": 145.129787,
+    "type": "assault",
+    "severity": 4
+  },
+  {
+    "lat": -37.903253,
+    "lng": 145.137499,
+    "type": "harassment",
+    "severity": 3
+  },
+  {
+    "lat": -37.896228,
+    "lng": 145.122975,
+    "type": "robbery",
+    "severity": 5
+  },
+  {
+    "lat": -37.907085,
+    "lng": 145.131347,
+    "type": "vandalism",
+    "severity": 2
+  },
+  {
+    "lat": -37.89329,
+    "lng": 145.130498,
+    "type": "theft",
+    "severity": 2
+  },
+  {
+    "lat": -37.892628,
+    "lng": 145.123282,
+    "type": "theft",
+    "severity": 3
+  },
+  {
+    "lat": -37.906904,
+    "lng": 145.123087,
+    "type": "assault",
+    "severity": 4
+  },
+  {
+    "lat": -37.90154,
+    "lng": 145.137066,
+    "type": "harassment",
+    "severity": 3
+  },
+  {
+    "lat": -37.904061,
+    "lng": 145.131512,
+    "type": "harassment",
+    "severity": 3
+  },
+  {
+    "lat": -37.906688,
+    "lng": 145.132518,
+    "type": "harassment",
+    "severity": 3
+  },
+  {
+    "lat": -37.899635,
+    "lng": 145.136955,
+    "type": "assault",
+    "severity": 4
+  },
+  {
+    "lat": -37.897284,
+    "lng": 145.127027,
+    "type": "assault",
+    "severity": 3
+  },
+  {
+    "lat": -37.901667,
+    "lng": 145.132747,
+    "type": "assault",
+    "severity": 3
+  },
+  {
+    "lat": -37.900684,
+    "lng": 145.136864,
+    "type": "theft",
+    "severity": 1
+  },
+  {
+    "lat": -37.907851,
+    "lng": 145.131939,
+    "type": "harassment",
+    "severity": 3
+  },
+  {
+    "lat": -37.892062,
+    "lng": 145.123172,
+    "type": "assault",
+    "severity": 4
+  },
+  {
+    "lat": -37.899906,
+    "lng": 145.124119,
+    "type": "robbery",
+    "severity": 5
+  },
+  {
+    "lat": -37.893906,
+    "lng": 145.136068,
+    "type": "robbery",
+    "severity": 5
+  },
+  {
+    "lat": -37.91308,
+    "lng": 145.133258,
+    "type": "theft",
+    "severity": 2
+  },
+  {
+    "lat": -37.90916,
+    "lng": 145.139847,
+    "type": "theft",
+    "severity": 1
+  },
+  {
+    "lat": -37.908486,
+    "lng": 145.134655,
+    "type": "theft",
+    "severity": 1
+  },
+  {
+    "lat": -37.905233,
+    "lng": 145.129611,
+    "type": "theft",
+    "severity": 1
+  },
+  {
+    "lat": -37.907591,
+    "lng": 145.129865,
+    "type": "vandalism",
+    "severity": 1
+  },
+  {
+    "lat": -37.907889,
+    "lng": 145.130443,
+    "type": "theft",
+    "severity": 2
+  },
+  {
+    "lat": -37.910435,
+    "lng": 145.131013,
+    "type": "theft",
+    "severity": 1
+  },
+  {
+    "lat": -37.908889,
+    "lng": 145.137952,
+    "type": "theft",
+    "severity": 1
+  },
+  {
+    "lat": -37.912497,
+    "lng": 145.12957,
+    "type": "vandalism",
+    "severity": 1
+  },
+  {
+    "lat": -37.907605,
+    "lng": 145.13462,
+    "type": "vandalism",
+    "severity": 1
+  },
+  {
+    "lat": -37.915158,
+    "lng": 145.139341,
+    "type": "theft",
+    "severity": 1
+  },
+  {
+    "lat": -37.909953,
+    "lng": 145.138015,
+    "type": "theft",
+    "severity": 1
+  },
+  {
+    "lat": -37.911343,
+    "lng": 145.128502,
+    "type": "vandalism",
+    "severity": 1
+  },
+  {
+    "lat": -37.905713,
+    "lng": 145.130521,
+    "type": "theft",
+    "severity": 1
+  },
+  {
+    "lat": -37.912256,
+    "lng": 145.134719,
+    "type": "vandalism",
+    "severity": 1
+  },
+  {
+    "lat": -37.905391,
+    "lng": 145.130841,
+    "type": "theft",
+    "severity": 1
+  },
+  {
+    "lat": -37.905923,
+    "lng": 145.128297,
+    "type": "theft",
+    "severity": 2
+  },
+  {
+    "lat": -37.907111,
+    "lng": 145.132941,
+    "type": "theft",
+    "severity": 1
+  },
+  {
+    "lat": -37.913298,
+    "lng": 145.137448,
+    "type": "theft",
+    "severity": 2
+  },
+  {
+    "lat": -37.906034,
+    "lng": 145.138303,
+    "type": "theft",
+    "severity": 1
+  },
+  {
+    "lat": -37.906701,
+    "lng": 145.133524,
+    "type": "vandalism",
+    "severity": 1
+  },
+  {
+    "lat": -37.913825,
+    "lng": 145.13592,
+    "type": "vandalism",
+    "severity": 2
+  },
+  {
+    "lat": -37.913157,
+    "lng": 145.128833,
+    "type": "vandalism",
+    "severity": 2
+  },
+  {
+    "lat": -37.908802,
+    "lng": 145.132796,
+    "type": "theft",
+    "severity": 2
+  },
+  {
+    "lat": -37.905229,
+    "lng": 145.129384,
+    "type": "vandalism",
+    "severity": 1
+  },
+  {
+    "lat": -37.909533,
+    "lng": 145.139803,
+    "type": "theft",
+    "severity": 1
+  },
+  {
+    "lat": -37.909341,
+    "lng": 145.132148,
+    "type": "vandalism",
+    "severity": 2
+  },
+  {
+    "lat": -37.909225,
+    "lng": 145.134137,
+    "type": "vandalism",
+    "severity": 1
+  },
+  {
+    "lat": -37.913443,
+    "lng": 145.136505,
+    "type": "theft",
+    "severity": 1
+  },
+  {
+    "lat": -37.912129,
+    "lng": 145.12884,
+    "type": "theft",
+    "severity": 2
+  },
+  {
+    "lat": -37.906805,
+    "lng": 145.138902,
+    "type": "theft",
+    "severity": 1
+  },
+  {
+    "lat": -37.903907,
+    "lng": 145.12801,
+    "type": "assault",
+    "severity": 3
+  },
+  {
+    "lat": -37.905493,
+    "lng": 145.128785,
+    "type": "assault",
+    "severity": 3
+  },
+  {
+    "lat": -37.908868,
+    "lng": 145.124755,
+    "type": "harassment",
+    "severity": 2
+  },
+  {
+    "lat": -37.897289,
+    "lng": 145.13932,
+    "type": "theft",
+    "severity": 3
+  },
+  {
+    "lat": -37.907035,
+    "lng": 145.128028,
+    "type": "vandalism",
+    "severity": 2
+  },
+  {
+    "lat": -37.900488,
+    "lng": 145.128116,
+    "type": "assault",
+    "severity": 4
+  },
+  {
+    "lat": -37.912603,
+    "lng": 145.1364,
+    "type": "harassment",
+    "severity": 2
+  },
+  {
+    "lat": -37.915833,
+    "lng": 145.132254,
+    "type": "harassment",
+    "severity": 2
+  },
+  {
+    "lat": -37.919089,
+    "lng": 145.133196,
+    "type": "theft",
+    "severity": 3
+  },
+  {
+    "lat": -37.905734,
+    "lng": 145.127514,
+    "type": "harassment",
+    "severity": 2
+  },
+  {
+    "lat": -37.906512,
+    "lng": 145.129056,
+    "type": "assault",
+    "severity": 4
+  },
+  {
+    "lat": -37.905316,
+    "lng": 145.125739,
+    "type": "assault",
+    "severity": 4
+  },
+  {
+    "lat": -37.921079,
+    "lng": 145.120386,
+    "type": "vandalism",
+    "severity": 1
+  },
+  {
+    "lat": -37.907162,
+    "lng": 145.142055,
+    "type": "vandalism",
+    "severity": 1
+  },
+  {
+    "lat": -37.913067,
+    "lng": 145.137893,
+    "type": "assault",
+    "severity": 4
+  },
+  {
+    "lat": -37.90395,
+    "lng": 145.130519,
+    "type": "robbery",
+    "severity": 4
+  },
+  {
+    "lat": -37.91818,
+    "lng": 145.138682,
+    "type": "theft",
+    "severity": 2
+  },
+  {
+    "lat": -37.89872,
+    "lng": 145.144813,
+    "type": "theft",
+    "severity": 1
+  },
+  {
+    "lat": -37.902147,
+    "lng": 145.125565,
+    "type": "vandalism",
+    "severity": 2
+  },
+  {
+    "lat": -37.911564,
+    "lng": 145.135722,
+    "type": "theft",
+    "severity": 1
+  },
+  {
+    "lat": -37.911806,
+    "lng": 145.143042,
+    "type": "harassment",
+    "severity": 2
+  },
+  {
+    "lat": -37.909566,
+    "lng": 145.135768,
+    "type": "robbery",
+    "severity": 5
+  },
+  {
+    "lat": -37.896999,
+    "lng": 145.145743,
+    "type": "harassment",
+    "severity": 3
+  },
+  {
+    "lat": -37.90105,
+    "lng": 145.145761,
+    "type": "robbery",
+    "severity": 4
+  },
+  {
+    "lat": -37.900583,
+    "lng": 145.135436,
+    "type": "theft",
+    "severity": 3
+  },
+  {
+    "lat": -37.90319,
+    "lng": 145.13324,
+    "type": "assault",
+    "severity": 3
+  },
+  {
+    "lat": -37.902947,
+    "lng": 145.144196,
+    "type": "assault",
+    "severity": 3
+  },
+  {
+    "lat": -37.902526,
+    "lng": 145.134639,
+    "type": "harassment",
+    "severity": 2
+  },
+  {
+    "lat": -37.918323,
+    "lng": 145.132196,
+    "type": "assault",
+    "severity": 3
+  },
+  {
+    "lat": -37.918465,
+    "lng": 145.129075,
+    "type": "vandalism",
+    "severity": 2
+  },
+  {
+    "lat": -37.923083,
+    "lng": 145.123525,
+    "type": "robbery",
+    "severity": 4
+  },
+  {
+    "lat": -37.904682,
+    "lng": 145.140193,
+    "type": "theft",
+    "severity": 1
+  },
+  {
+    "lat": -37.913054,
+    "lng": 145.128926,
+    "type": "vandalism",
+    "severity": 1
+  },
+  {
+    "lat": -37.913027,
+    "lng": 145.125205,
+    "type": "robbery",
+    "severity": 4
+  },
+  {
+    "lat": -37.913816,
+    "lng": 145.142094,
+    "type": "theft",
+    "severity": 2
+  },
+  {
+    "lat": -37.899798,
+    "lng": 145.141968,
+    "type": "robbery",
+    "severity": 4
+  },
+  {
+    "lat": -37.911191,
+    "lng": 145.147282,
+    "type": "assault",
+    "severity": 3
+  },
+  {
+    "lat": -37.902896,
+    "lng": 145.144603,
+    "type": "robbery",
+    "severity": 4
+  },
+  {
+    "lat": -37.909353,
+    "lng": 145.141039,
+    "type": "harassment",
+    "severity": 3
+  },
+  {
+    "lat": -37.898566,
+    "lng": 145.133647,
+    "type": "assault",
+    "severity": 3
+  },
+  {
+    "lat": -37.912425,
+    "lng": 145.119871,
+    "type": "robbery",
+    "severity": 5
+  },
+  {
+    "lat": -37.905434,
+    "lng": 145.142944,
+    "type": "theft",
+    "severity": 3
+  },
+  {
+    "lat": -37.900285,
+    "lng": 145.146586,
+    "type": "harassment",
+    "severity": 3
+  },
+  {
+    "lat": -37.909476,
+    "lng": 145.146208,
+    "type": "harassment",
+    "severity": 3
+  },
+  {
+    "lat": -37.908568,
+    "lng": 145.119813,
+    "type": "harassment",
+    "severity": 2
+  },
+  {
+    "lat": -37.912642,
+    "lng": 145.145006,
+    "type": "theft",
+    "severity": 3
+  },
+  {
+    "lat": -37.923991,
+    "lng": 145.130373,
+    "type": "assault",
+    "severity": 4
+  },
+  {
+    "lat": -37.911859,
+    "lng": 145.129125,
+    "type": "robbery",
+    "severity": 4
+  },
+  {
+    "lat": -37.917152,
+    "lng": 145.147536,
+    "type": "robbery",
+    "severity": 4
+  },
+  {
+    "lat": -37.917932,
+    "lng": 145.121457,
+    "type": "theft",
+    "severity": 2
+  },
+  {
+    "lat": -37.903029,
+    "lng": 145.120563,
+    "type": "robbery",
+    "severity": 5
+  },
+  {
+    "lat": -37.918773,
+    "lng": 145.121059,
+    "type": "harassment",
+    "severity": 2
+  },
+  {
+    "lat": -37.924292,
+    "lng": 145.119931,
+    "type": "assault",
+    "severity": 4
+  },
+  {
+    "lat": -37.919519,
+    "lng": 145.119611,
+    "type": "theft",
+    "severity": 3
+  },
+  {
+    "lat": -37.918344,
+    "lng": 145.133207,
+    "type": "theft",
+    "severity": 1
+  },
+  {
+    "lat": -37.908581,
+    "lng": 145.125539,
+    "type": "assault",
+    "severity": 3
+  },
+  {
+    "lat": -37.902493,
+    "lng": 145.124034,
+    "type": "harassment",
+    "severity": 3
+  },
+  {
+    "lat": -37.896588,
+    "lng": 145.140551,
+    "type": "theft",
+    "severity": 3
+  },
+  {
+    "lat": -37.896558,
+    "lng": 145.122243,
+    "type": "theft",
+    "severity": 2
+  },
+  {
+    "lat": -37.897633,
+    "lng": 145.136274,
+    "type": "robbery",
+    "severity": 4
+  },
+  {
+    "lat": -37.9136,
+    "lng": 145.14045,
+    "type": "theft",
+    "severity": 1
+  },
+  {
+    "lat": -37.907737,
+    "lng": 145.143917,
+    "type": "assault",
+    "severity": 4
+  },
+  {
+    "lat": -37.922443,
+    "lng": 145.142174,
+    "type": "harassment",
+    "severity": 2
+  },
+  {
+    "lat": -37.907488,
+    "lng": 145.122632,
+    "type": "harassment",
+    "severity": 3
+  },
+  {
+    "lat": -37.902021,
+    "lng": 145.129416,
+    "type": "robbery",
+    "severity": 4
+  },
+  {
+    "lat": -37.905654,
+    "lng": 145.121069,
+    "type": "harassment",
+    "severity": 2
+  },
+  {
+    "lat": -37.915263,
+    "lng": 145.144487,
+    "type": "vandalism",
+    "severity": 1
+  },
+  {
+    "lat": -37.922334,
+    "lng": 145.147824,
+    "type": "harassment",
+    "severity": 2
+  },
+  {
+    "lat": -37.898753,
+    "lng": 145.132792,
+    "type": "theft",
+    "severity": 3
+  }
+]

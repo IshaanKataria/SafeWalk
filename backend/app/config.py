@@ -2,7 +2,7 @@ from pydantic_settings import BaseSettings
 
 
 class Settings(BaseSettings):
-    database_url: str = "postgresql://safewalk:safewalk@localhost:5432/safewalk"
+    database_url: str = "postgresql://safewalk:safewalk@localhost:5433/safewalk"
     google_maps_api_key: str = ""
     use_mock_data: bool = True
     scoring_engine: str = "mock"
