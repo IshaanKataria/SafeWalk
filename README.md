@@ -83,7 +83,7 @@ Project Structure
             └── types/          TypeScript interfaces
 
 
-For ML Team (Callum)
+For ML Team
 
 You do NOT need the frontend or a Google Maps API key. Your work is backend only.
 
