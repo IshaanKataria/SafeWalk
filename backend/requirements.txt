@@ -1,0 +1,9 @@
+fastapi
+uvicorn[standard]
+sqlalchemy
+geoalchemy2
+alembic
+psycopg2-binary
+pydantic-settings
+httpx
+polyline

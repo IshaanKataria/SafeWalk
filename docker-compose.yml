@@ -1,0 +1,15 @@
+services:
+  db:
+    image: postgis/postgis:16-3.4
+    container_name: safewalk-db
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: safewalk
+      POSTGRES_PASSWORD: safewalk
+      POSTGRES_DB: safewalk
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+volumes:
+  pgdata:
