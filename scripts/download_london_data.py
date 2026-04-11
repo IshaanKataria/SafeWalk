@@ -22,13 +22,14 @@ from pathlib import Path
 import httpx
 
 # ---------------------------------------------------------------------------
-# Wandsworth, London bounding box (fixed unless overridden via CLI)
+# Barnet (Hendon / Golders Green) bounding box. Aligned with the
+# comprehensive street lighting dataset we train the ML model on.
 # ---------------------------------------------------------------------------
 DEFAULT_BBOX = {
-    "min_lat": 51.43,
-    "max_lat": 51.47,
-    "min_lng": -0.22,
-    "max_lng": -0.15,
+    "min_lat": 51.56,
+    "max_lat": 51.60,
+    "min_lng": -0.24,
+    "max_lng": -0.17,
 }
 
 # Map UK Police crime categories to 1-5 severity

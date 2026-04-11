@@ -8,7 +8,7 @@ boundaries so the frontend can render smooth road-following curves.
 """
 
 from app.services.data_loader import haversine_km
-from app.services.scoring_engine import score_segment
+from app.services.scorer_selector import score_segment
 
 SAMPLE_INTERVAL_KM = 0.1  # score every ~100m
 

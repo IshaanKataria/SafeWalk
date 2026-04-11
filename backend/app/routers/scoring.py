@@ -1,7 +1,7 @@
 from fastapi import APIRouter
 
 from app.schemas.scoring import ScoreSegmentRequest, ScoreSegmentResponse
-from app.services.scoring_engine import score_segment
+from app.services.scorer_selector import score_segment
 
 router = APIRouter(prefix="/api", tags=["scoring"])
 

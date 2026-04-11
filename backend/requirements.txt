@@ -7,3 +7,7 @@ psycopg2-binary
 pydantic-settings
 httpx
 polyline
+xgboost
+scikit-learn
+numpy
+joblib

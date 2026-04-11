@@ -12,16 +12,17 @@ from app.config import settings
 from app.database import get_db
 from app.models.community_report import CommunityReport
 from app.schemas.heatmap import HeatmapPoint, HeatmapResponse
-from app.services.scoring_engine import score_segment, set_community_reports
+from app.services.scorer_selector import score_segment
+from app.services.scoring_engine import set_community_reports
 
 router = APIRouter(prefix="/api", tags=["heatmap"])
 
-# Wandsworth bounding box (matches the data download script)
+# Barnet (Hendon / Golders Green) bounding box, aligned with data files.
 DEFAULT_BBOX = {
-    "min_lat": 51.43,
-    "max_lat": 51.47,
-    "min_lng": -0.22,
-    "max_lng": -0.15,
+    "min_lat": 51.56,
+    "max_lat": 51.60,
+    "min_lng": -0.24,
+    "max_lng": -0.17,
 }
 GRID_SPACING_M = 250  # ~250m between sample points
 

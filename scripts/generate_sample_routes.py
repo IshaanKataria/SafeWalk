@@ -26,8 +26,8 @@ DEFAULT_OUTPUT = (
     Path(__file__).resolve().parent.parent
     / "backend" / "app" / "data" / "sample_routes_london.json"
 )
-DEFAULT_ORIGIN = "Clapham Junction Station, London"
-DEFAULT_DESTINATION = "Wandsworth Town Station, London"
+DEFAULT_ORIGIN = "Hendon Central Station, London"
+DEFAULT_DESTINATION = "Golders Green Station, London"
 
 
 def _load_api_key() -> str:

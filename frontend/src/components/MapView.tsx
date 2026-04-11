@@ -7,7 +7,7 @@ import { scoreToHex } from "@/lib/colors";
 import ReportMarkers from "./ReportMarkers";
 import HeatmapLayer from "./HeatmapLayer";
 
-const WANDSWORTH = { lat: 51.45, lng: -0.19 };
+const BARNET = { lat: 51.58, lng: -0.205 };
 
 interface MapViewProps {
   routes: ScoredRoute[];
@@ -53,8 +53,8 @@ export default function MapView({
   return (
     <APIProvider apiKey={apiKey} libraries={["visualization"]}>
       <Map
-        defaultCenter={WANDSWORTH}
-        defaultZoom={15}
+        defaultCenter={BARNET}
+        defaultZoom={14}
         mapId="safewalk-map"
         gestureHandling="greedy"
         disableDefaultUI={false}

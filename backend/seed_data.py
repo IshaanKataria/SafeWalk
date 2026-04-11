@@ -16,32 +16,32 @@ SENTINEL_DESCRIPTION = "[seed] broken lamps along underpass"
 
 DEMO_REPORTS: list[dict] = [
     {
-        "lat": 51.4548,
-        "lng": -0.1901,
+        "lat": 51.5790,
+        "lng": -0.2200,
         "category": "lighting",
         "description": SENTINEL_DESCRIPTION,
     },
     {
-        "lat": 51.4625,
-        "lng": -0.1735,
+        "lat": 51.5740,
+        "lng": -0.1960,
         "category": "harassment",
         "description": "[seed] group loitering near the station late at night",
     },
     {
-        "lat": 51.4585,
-        "lng": -0.1820,
+        "lat": 51.5810,
+        "lng": -0.2050,
         "category": "crime",
         "description": "[seed] bag snatched from pedestrian last week",
     },
     {
-        "lat": 51.4510,
-        "lng": -0.1775,
+        "lat": 51.5850,
+        "lng": -0.2150,
         "category": "lighting",
         "description": "[seed] dim streetlights along park edge",
     },
     {
-        "lat": 51.4660,
-        "lng": -0.1690,
+        "lat": 51.5775,
+        "lng": -0.2010,
         "category": "other",
         "description": "[seed] damaged pavement, tripping hazard at night",
     },

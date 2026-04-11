@@ -1,4 +1,11 @@
+from pathlib import Path
+
 from pydantic_settings import BaseSettings
+
+# .env lives at the project root (one level above backend/).
+# config.py is at SafeWalk/backend/app/config.py, so three parents up is SafeWalk/.
+_PROJECT_ROOT = Path(__file__).resolve().parent.parent.parent
+_ENV_FILE = _PROJECT_ROOT / ".env"
 
 
 class Settings(BaseSettings):
@@ -6,11 +13,11 @@ class Settings(BaseSettings):
     google_maps_api_key: str = ""
     use_mock_data: bool = True
     scoring_engine: str = "mock"
-    # "london" -> real Wandsworth data in app/data/
+    # "london" -> real Barnet data in app/data/
     # "mock"   -> synthetic Clayton data in app/mock_data/
     data_source: str = "london"
 
-    model_config = {"env_file": ".env"}
+    model_config = {"env_file": str(_ENV_FILE)}
 
 
 settings = Settings()
