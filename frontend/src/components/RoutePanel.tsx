@@ -1,5 +1,6 @@
 "use client";
 
+import { useMemo } from "react";
 import { ScoredRoute } from "@/types";
 import { scoreToBg, scoreToText, scoreToLabel, scoreToHex } from "@/lib/colors";
 
@@ -9,8 +10,41 @@ interface RoutePanelProps {
   onSelectRoute: (index: number) => void;
 }
 
+type BadgeKind = "recommended" | "safest" | "fastest" | null;
+
+const BADGE_STYLES: Record<Exclude<BadgeKind, null>, string> = {
+  recommended: "bg-green-500/20 text-green-300",
+  safest:      "bg-green-500/20 text-green-300",
+  fastest:     "bg-blue-500/20 text-blue-300",
+};
+
+const BADGE_LABELS: Record<Exclude<BadgeKind, null>, string> = {
+  recommended: "Recommended",
+  safest:      "Safest",
+  fastest:     "Fastest",
+};
+
 export default function RoutePanel({ routes, selectedIndex, onSelectRoute }: RoutePanelProps) {
+  const { safestIdx, fastestIdx } = useMemo(() => {
+    if (routes.length === 0) return { safestIdx: -1, fastestIdx: -1 };
+
+    let safest = 0;
+    let fastest = 0;
+    for (let i = 1; i < routes.length; i++) {
+      if (routes[i].overall_score > routes[safest].overall_score) safest = i;
+      if (routes[i].duration_min < routes[fastest].duration_min) fastest = i;
+    }
+    return { safestIdx: safest, fastestIdx: fastest };
+  }, [routes]);
+
   if (routes.length === 0) return null;
+
+  function getBadge(idx: number): BadgeKind {
+    if (idx === safestIdx && idx === fastestIdx) return "recommended";
+    if (idx === safestIdx) return "safest";
+    if (idx === fastestIdx) return "fastest";
+    return null;
+  }
 
   return (
     <div className="space-y-3 animate-fade-in">
@@ -20,7 +54,7 @@ export default function RoutePanel({ routes, selectedIndex, onSelectRoute }: Rou
 
       {routes.map((route, idx) => {
         const isSelected = idx === selectedIndex;
-        const isSafest = idx === 0;
+        const badge = getBadge(idx);
 
         return (
           <button
@@ -34,9 +68,11 @@ export default function RoutePanel({ routes, selectedIndex, onSelectRoute }: Rou
           >
             <div className="flex items-start justify-between gap-3 mb-3">
               <div className="flex-1 min-w-0">
-                {isSafest && (
-                  <span className="inline-flex items-center gap-1 text-[10px] font-semibold bg-green-500/20 text-green-300 px-2 py-0.5 rounded-full uppercase tracking-wide mb-1">
-                    Recommended
+                {badge && (
+                  <span
+                    className={`inline-flex items-center gap-1 text-[10px] font-semibold px-2 py-0.5 rounded-full uppercase tracking-wide mb-1 ${BADGE_STYLES[badge]}`}
+                  >
+                    {BADGE_LABELS[badge]}
                   </span>
                 )}
                 <p className="text-sm text-zinc-200 font-medium truncate">
