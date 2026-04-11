@@ -4,7 +4,7 @@ import { Map, Polyline, APIProvider } from "@vis.gl/react-google-maps";
 import { ScoredRoute } from "@/types";
 import { scoreToHex } from "@/lib/colors";
 
-const MONASH_CLAYTON = { lat: -37.9105, lng: 145.134 };
+const WANDSWORTH = { lat: 51.45, lng: -0.19 };
 
 interface MapViewProps {
   routes: ScoredRoute[];
@@ -26,7 +26,7 @@ export default function MapView({ routes, selectedIndex, onSelectRoute }: MapVie
   return (
     <APIProvider apiKey={apiKey}>
       <Map
-        defaultCenter={MONASH_CLAYTON}
+        defaultCenter={WANDSWORTH}
         defaultZoom={15}
         mapId="safewalk-map"
         gestureHandling="greedy"

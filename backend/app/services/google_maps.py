@@ -15,12 +15,15 @@ from app.config import settings
 
 logger = logging.getLogger(__name__)
 
-_MOCK_DATA_PATH = Path(__file__).resolve().parent.parent / "mock_data" / "sample_routes.json"
+_APP_DIR = Path(__file__).resolve().parent.parent
+_LONDON_ROUTES_PATH = _APP_DIR / "data" / "sample_routes_london.json"
+_CLAYTON_ROUTES_PATH = _APP_DIR / "mock_data" / "sample_routes.json"
 _DIRECTIONS_URL = "https://maps.googleapis.com/maps/api/directions/json"
 
 
 def _load_mock_routes() -> list[dict]:
-    with open(_MOCK_DATA_PATH) as f:
+    path = _LONDON_ROUTES_PATH if settings.data_source == "london" else _CLAYTON_ROUTES_PATH
+    with open(path) as f:
         return json.load(f)
 
 

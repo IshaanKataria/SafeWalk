@@ -1,34 +1,53 @@
-"""Mock safety scoring engine.
+"""Safety scoring engine.
 
 Scores a geographic point for pedestrian safety based on nearby crime,
-street lighting density, and time of day. Returns 0-100 where higher = safer.
+street lighting density, public transport, and time of day.
+Returns 0-100 where higher = safer.
 
-This module defines the stable interface that Callum's ML model will replace.
+This module defines the stable interface that the ML model will replace.
 The only function that matters externally is score_segment().
 """
 
-from app.services.data_loader import get_nearby_crimes, get_nearby_lights
+import math
+
+from app.services.data_loader import (
+    get_nearby_crimes,
+    get_nearby_lights,
+    get_nearby_transport,
+)
 
 # --- Tunable weights ---
-BASE_SCORE = 75
+BASE_SCORE = 85
+
 CRIME_RADIUS_KM = 0.3
 LIGHTING_RADIUS_KM = 0.2
-CRIME_WEIGHT_PER_SEVERITY = 2.0  # penalty per severity point
-MAX_CRIME_PENALTY = 45
-LIGHTING_BONUS_PER_LIGHT = 3.0
-MAX_LIGHTING_BONUS = 25
-# Night multiplier: how much more lighting/crime matter after dark
+TRANSPORT_RADIUS_KM = 0.25
+
+# Crime: square-root of total severity. sqrt compresses the long tail so dense
+# urban areas don't all max out.
+CRIME_SEVERITY_SQRT_WEIGHT = 1.6
+MAX_CRIME_PENALTY = 50
+
+# Lighting: rare in OSM (not every lamp is tagged), so each one is worth a lot.
+LIGHTING_BONUS_PER_LIGHT = 5.0
+MAX_LIGHTING_BONUS = 20
+
+# Transport: sqrt-scaled. More bus stops and stations = busier = safer.
+TRANSPORT_SQRT_WEIGHT = 3.0
+MAX_TRANSPORT_BONUS = 20
+
+# Night multipliers — lighting and crime matter more after dark.
 NIGHT_LIGHTING_MULTIPLIER = 2.0
-NIGHT_CRIME_MULTIPLIER = 1.5
+NIGHT_CRIME_MULTIPLIER = 1.3
 
 
 def _time_modifier(hour: int) -> float:
     """Baseline modifier based on time of day.
 
-    Daylight (7-17): +10 bonus
-    Dusk/dawn (5-7, 17-19): 0
-    Night (19-23): -5 to -15 penalty (gets worse later)
-    Late night (0-5): -15 penalty
+    Daylight (7-17):          +10 bonus
+    Dusk/dawn (5-7, 17-19):     0
+    Night (19-23):             -5 to -15 penalty (progressively worse)
+    Late night (0-5):          -15 penalty
     """
     if 7 <= hour <= 17:
         return 10.0
@@ -36,7 +55,6 @@ def _time_modifier(hour: int) -> float:
         return 0.0
     if 19 < hour <= 23:
         return -5.0 - (hour - 19) * 2.5
-    # 0-4
     return -15.0
 
 
@@ -58,23 +76,37 @@ def score_segment(lat: float, lng: float, time_of_day: int) -> dict:
     hour = max(0, min(23, time_of_day))
     dark = _is_dark(hour)
 
-    # Crime factor
+    # --- Crime ---
     nearby_crimes = get_nearby_crimes(lat, lng, CRIME_RADIUS_KM)
     total_severity = sum(c["severity"] for c in nearby_crimes)
     crime_multiplier = NIGHT_CRIME_MULTIPLIER if dark else 1.0
-    crime_penalty = min(total_severity * CRIME_WEIGHT_PER_SEVERITY * crime_multiplier, MAX_CRIME_PENALTY)
+    crime_penalty = min(
+        math.sqrt(total_severity) * CRIME_SEVERITY_SQRT_WEIGHT * crime_multiplier,
+        MAX_CRIME_PENALTY,
+    )
 
-    # Lighting factor
+    # --- Lighting ---
     nearby_lights = get_nearby_lights(lat, lng, LIGHTING_RADIUS_KM)
     light_count = len(nearby_lights)
     lighting_multiplier = NIGHT_LIGHTING_MULTIPLIER if dark else 1.0
-    lighting_bonus = min(light_count * LIGHTING_BONUS_PER_LIGHT * lighting_multiplier, MAX_LIGHTING_BONUS)
+    lighting_bonus = min(
+        light_count * LIGHTING_BONUS_PER_LIGHT * lighting_multiplier,
+        MAX_LIGHTING_BONUS,
+    )
 
-    # Time factor
+    # --- Transport (proxy for busy/active areas) ---
+    nearby_transport = get_nearby_transport(lat, lng, TRANSPORT_RADIUS_KM)
+    transport_count = len(nearby_transport)
+    transport_bonus = min(
+        math.sqrt(transport_count) * TRANSPORT_SQRT_WEIGHT,
+        MAX_TRANSPORT_BONUS,
+    )
+
+    # --- Time ---
     time_mod = _time_modifier(hour)
 
-    # Final score
-    raw = BASE_SCORE - crime_penalty + lighting_bonus + time_mod
+    # --- Final ---
+    raw = BASE_SCORE - crime_penalty + lighting_bonus + transport_bonus + time_mod
     safety_score = max(0, min(100, round(raw)))
 
     return {
@@ -85,6 +117,8 @@ def score_segment(lat: float, lng: float, time_of_day: int) -> dict:
             "crime_penalty": round(crime_penalty, 1),
             "light_count": light_count,
             "lighting_bonus": round(lighting_bonus, 1),
+            "transport_count": transport_count,
+            "transport_bonus": round(transport_bonus, 1),
             "time_modifier": time_mod,
             "is_dark": dark,
         },

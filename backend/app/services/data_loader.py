@@ -1,30 +1,73 @@
+"""Loads crime, lighting, and transport data from disk.
+
+The dataset is selected via the DATA_SOURCE env var:
+  - "london" -> real Wandsworth data in app/data/ (default)
+  - "mock"   -> synthetic Clayton data in app/mock_data/
+"""
+
 import json
 import math
 from pathlib import Path
 
-_DATA_DIR = Path(__file__).resolve().parent.parent / "mock_data"
+from app.config import settings
+
+_APP_DIR = Path(__file__).resolve().parent.parent
+_REAL_DIR = _APP_DIR / "data"
+_MOCK_DIR = _APP_DIR / "mock_data"
+
+_FILES: dict[str, dict[str, str]] = {
+    "london": {
+        "crime": "crime_data_london.json",
+        "lighting": "lighting_data_london.json",
+        "transport": "transport_data_london.json",
+    },
+    "mock": {
+        "crime": "crime_data.json",
+        "lighting": "lighting_data.json",
+        # mock Clayton dataset has no transport file
+        "transport": "",
+    },
+}
 
 _crime_cache: list[dict] | None = None
 _lighting_cache: list[dict] | None = None
+_transport_cache: list[dict] | None = None
 
 
-def _load_json(filename: str) -> list[dict]:
-    with open(_DATA_DIR / filename) as f:
+def _source_dir() -> Path:
+    return _REAL_DIR if settings.data_source == "london" else _MOCK_DIR
+
+
+def _load(key: str) -> list[dict]:
+    filename = _FILES.get(settings.data_source, _FILES["mock"])[key]
+    if not filename:
+        return []
+    path = _source_dir() / filename
+    if not path.exists():
+        return []
+    with open(path) as f:
         return json.load(f)
 
 
 def _get_crimes() -> list[dict]:
     global _crime_cache
     if _crime_cache is None:
-        _crime_cache = _load_json("crime_data.json")
+        _crime_cache = _load("crime")
     return _crime_cache
 
 
 def _get_lights() -> list[dict]:
     global _lighting_cache
     if _lighting_cache is None:
-        _lighting_cache = _load_json("lighting_data.json")
+        _lighting_cache = _load("lighting")
     return _lighting_cache
+
+
+def _get_transport() -> list[dict]:
+    global _transport_cache
+    if _transport_cache is None:
+        _transport_cache = _load("transport")
+    return _transport_cache
 
 
 def haversine_km(lat1: float, lng1: float, lat2: float, lng2: float) -> float:
@@ -52,4 +95,11 @@ def get_nearby_lights(lat: float, lng: float, radius_km: float = 0.2) -> list[di
     return [
         l for l in _get_lights()
         if haversine_km(lat, lng, l["lat"], l["lng"]) <= radius_km
+    ]
+
+
+def get_nearby_transport(lat: float, lng: float, radius_km: float = 0.3) -> list[dict]:
+    return [
+        t for t in _get_transport()
+        if haversine_km(lat, lng, t["lat"], t["lng"]) <= radius_km
     ]

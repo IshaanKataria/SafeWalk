@@ -15,8 +15,8 @@ function formatHour(hour: number): string {
 }
 
 export default function RouteForm({ onSubmit, loading }: RouteFormProps) {
-  const [origin, setOrigin] = useState("Monash University Clayton");
-  const [destination, setDestination] = useState("Clayton Railway Station");
+  const [origin, setOrigin] = useState("Clapham Junction Station, London");
+  const [destination, setDestination] = useState("Wandsworth Town Station, London");
   const [timeOfDay, setTimeOfDay] = useState(21);
 
   function handleSubmit(e: React.FormEvent) {
