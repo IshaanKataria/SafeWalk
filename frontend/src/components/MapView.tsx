@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Map, Polyline, APIProvider, MapMouseEvent } from "@vis.gl/react-google-maps";
+import { Map, Polyline, MapMouseEvent } from "@vis.gl/react-google-maps";
 import { CommunityReport, HeatmapPoint, LatLng, ScoredRoute } from "@/types";
 import { scoreToHex } from "@/lib/colors";
 import ReportMarkers from "./ReportMarkers";
@@ -28,16 +28,7 @@ export default function MapView({
   onMapClick,
   heatmapPoints,
 }: MapViewProps) {
-  const apiKey = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY;
   const [selectedReportId, setSelectedReportId] = useState<string | null>(null);
-
-  if (!apiKey) {
-    return (
-      <div className="flex-1 flex items-center justify-center bg-zinc-900 text-zinc-400">
-        <p>Set NEXT_PUBLIC_GOOGLE_MAPS_API_KEY in frontend/.env.local to load the map.</p>
-      </div>
-    );
-  }
 
   function handleClick(event: MapMouseEvent) {
     // Clicking anywhere on the map (not on a marker) dismisses any open popup.
@@ -51,41 +42,39 @@ export default function MapView({
   }
 
   return (
-    <APIProvider apiKey={apiKey} libraries={["visualization"]}>
-      <Map
-        defaultCenter={BARNET}
-        defaultZoom={14}
-        mapId="safewalk-map"
-        gestureHandling="greedy"
-        disableDefaultUI={false}
-        className={`w-full h-full ${reportMode ? "cursor-crosshair" : ""}`}
-        colorScheme="DARK"
-        onClick={handleClick}
-      >
-        {routes.map((route, routeIdx) => {
-          const isSelected = routeIdx === selectedIndex;
-          const dimmed = !isSelected && routes.length > 0;
+    <Map
+      defaultCenter={BARNET}
+      defaultZoom={14}
+      mapId="safewalk-map"
+      gestureHandling="greedy"
+      disableDefaultUI={false}
+      className={`w-full h-full ${reportMode ? "cursor-crosshair" : ""}`}
+      colorScheme="DARK"
+      onClick={handleClick}
+    >
+      {routes.map((route, routeIdx) => {
+        const isSelected = routeIdx === selectedIndex;
+        const dimmed = !isSelected && routes.length > 0;
 
-          return route.segments.map((seg, segIdx) => (
-            <Polyline
-              key={`${routeIdx}-${segIdx}`}
-              path={seg.path}
-              strokeColor={scoreToHex(seg.safety_score)}
-              strokeOpacity={dimmed ? 0.25 : 0.9}
-              strokeWeight={isSelected ? 6 : 3}
-              onClick={() => onSelectRoute(routeIdx)}
-            />
-          ));
-        })}
+        return route.segments.map((seg, segIdx) => (
+          <Polyline
+            key={`${routeIdx}-${segIdx}`}
+            path={seg.path}
+            strokeColor={scoreToHex(seg.safety_score)}
+            strokeOpacity={dimmed ? 0.25 : 0.9}
+            strokeWeight={isSelected ? 6 : 3}
+            onClick={() => onSelectRoute(routeIdx)}
+          />
+        ));
+      })}
 
-        {heatmapPoints && <HeatmapLayer points={heatmapPoints} />}
+      {heatmapPoints && <HeatmapLayer points={heatmapPoints} />}
 
-        <ReportMarkers
-          reports={reports}
-          selectedId={selectedReportId}
-          onSelect={setSelectedReportId}
-        />
-      </Map>
-    </APIProvider>
+      <ReportMarkers
+        reports={reports}
+        selectedId={selectedReportId}
+        onSelect={setSelectedReportId}
+      />
+    </Map>
   );
 }

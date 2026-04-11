@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { APIProvider } from "@vis.gl/react-google-maps";
 import MapView from "@/components/MapView";
 import RouteForm from "@/components/RouteForm";
 import RoutePanel from "@/components/RoutePanel";
@@ -13,7 +14,27 @@ import { useReports } from "@/hooks/useReports";
 import { useHeatmap } from "@/hooks/useHeatmap";
 import { LatLng, ReportCategory } from "@/types";
 
+const MAPS_LIBRARIES: ("visualization" | "places")[] = ["visualization", "places"];
+
 export default function Home() {
+  const apiKey = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY;
+
+  if (!apiKey) {
+    return (
+      <div className="h-full flex items-center justify-center bg-zinc-950 text-zinc-400">
+        <p>Set NEXT_PUBLIC_GOOGLE_MAPS_API_KEY in frontend/.env.local to load the app.</p>
+      </div>
+    );
+  }
+
+  return (
+    <APIProvider apiKey={apiKey} libraries={MAPS_LIBRARIES}>
+      <HomeInner />
+    </APIProvider>
+  );
+}
+
+function HomeInner() {
   const { routes, loading, error, search } = useRoutes();
   const { reports, create: createReport } = useReports();
 

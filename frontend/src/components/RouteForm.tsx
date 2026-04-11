@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import PlaceAutocomplete from "./PlaceAutocomplete";
 import Spinner from "./Spinner";
 
 interface RouteFormProps {
@@ -30,27 +31,23 @@ export default function RouteForm({ onSubmit, loading }: RouteFormProps) {
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
-      <div>
-        <label className="block text-sm text-zinc-400 mb-1">From</label>
-        <input
-          type="text"
-          value={origin}
-          onChange={(e) => setOrigin(e.target.value)}
-          className="w-full px-3 py-2 bg-zinc-800 border border-zinc-700 rounded-lg text-white placeholder-zinc-500 focus:outline-none focus:border-blue-500"
-          placeholder="Starting location"
-        />
-      </div>
+      <PlaceAutocomplete
+        label="From"
+        value={origin}
+        onChange={setOrigin}
+        placeholder="Starting location"
+      />
 
-      <div>
-        <label className="block text-sm text-zinc-400 mb-1">To</label>
-        <input
-          type="text"
-          value={destination}
-          onChange={(e) => setDestination(e.target.value)}
-          className="w-full px-3 py-2 bg-zinc-800 border border-zinc-700 rounded-lg text-white placeholder-zinc-500 focus:outline-none focus:border-blue-500"
-          placeholder="Destination"
-        />
-      </div>
+      <PlaceAutocomplete
+        label="To"
+        value={destination}
+        onChange={setDestination}
+        placeholder="Destination"
+      />
+
+      <p className="text-[11px] text-zinc-500 -mt-2 leading-snug">
+        Best results within the Barnet area — our model is trained on local data.
+      </p>
 
       <div>
         <label className="block text-sm text-zinc-400 mb-1">

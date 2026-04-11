@@ -28,6 +28,57 @@ body {
   animation: fade-in 0.35s ease-out both;
 }
 
+/* Google Places Autocomplete dropdown — dark theme override.
+   The widget injects .pac-container into document.body with hardcoded light
+   styling, so we override it globally here. */
+.pac-container {
+  background-color: #18181b;
+  border: 1px solid #27272a;
+  border-radius: 0.5rem;
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5);
+  font-family: inherit;
+  margin-top: 4px;
+  padding: 4px 0;
+}
+
+.pac-item {
+  padding: 6px 10px;
+  border-top: 1px solid #27272a;
+  color: #d4d4d8;
+  cursor: pointer;
+  font-size: 13px;
+  line-height: 1.4;
+}
+
+.pac-item:first-child {
+  border-top: none;
+}
+
+.pac-item:hover,
+.pac-item-selected {
+  background-color: #27272a;
+}
+
+.pac-item-query {
+  color: #fafafa;
+  font-size: 13px;
+}
+
+.pac-matched {
+  color: #60a5fa;
+  font-weight: 600;
+}
+
+.pac-icon {
+  filter: invert(1) brightness(0.75);
+}
+
+.pac-logo::after {
+  background-color: #18181b;
+  filter: invert(1) brightness(0.85);
+  padding: 4px 8px;
+}
+
 /* Custom range slider (time of day) */
 input[type="range"] {
   height: 4px;
