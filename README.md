@@ -1,8 +1,28 @@
 SafeWalk -- Walking Route Safety Scorer
 
-Score any walking route for safety at any time of day using street lighting density, crime data, and community reports.
+Score any walking route for safety at any time of day using real crime data, street lighting density, public transport coverage, and community reports.
 
-Built for Macathon 2026.
+Built for Macathon 2026. Demo area: Wandsworth, London.
+
+
+The Problem
+
+1 in 3 women feel unsafe walking at night in their own neighbourhood. Every student walking home from a late lecture, every shift worker heading to the train, every person walking somewhere unfamiliar does the same mental calculation: "is this route safe?" There's no data. Just gut feel and hope.
+
+SafeWalk answers that question with real data, before you walk.
+
+
+How It Works
+
+Enter a start, destination, and time of day. SafeWalk returns 2-3 walking routes, each split into segments and colour-coded (green / yellow / red) based on a safety score computed from:
+
+    - Historical crime incidents in the area (UK Police data)
+    - Street lighting density (OpenStreetMap)
+    - Proximity to public transport stops (busier = safer)
+    - Community-reported unsafe locations
+    - Time of day (dusk, night, and late-night penalties)
+
+The safest route is recommended. A toggleable heatmap shows safety across the entire neighbourhood at a glance. Users can flag their own unsafe locations, which persist in the database and immediately affect future route scores.
 
 
 Prerequisites
@@ -13,7 +33,24 @@ Prerequisites
     - Git
 
 
-Quick Setup
+Quick Setup (one command)
+
+    git clone https://github.com/IshaanKataria/SafeWalk.git
+    cd SafeWalk
+    ./scripts/setup.sh
+
+Then add the Google Maps API key to frontend/.env.local (see step 6 below), and start the two dev servers:
+
+    # Terminal 1
+    cd backend && source .venv/bin/activate && uvicorn app.main:app --reload
+
+    # Terminal 2
+    cd frontend && npm run dev
+
+Open http://localhost:3000
+
+
+Manual Setup (if the script doesn't work)
 
 1. Clone the repo
 
@@ -24,15 +61,13 @@ Quick Setup
 
     cp .env.example .env
 
-    The app works out of the box with mock data -- no API keys needed.
-    To enable real Google Maps routing, add your key to .env and set USE_MOCK_DATA=false.
+    The app works with real London data by default -- no API keys needed for the scoring engine. To enable real Google Maps walking directions (instead of the cached sample routes), add your key to .env and set USE_MOCK_DATA=false.
 
 3. Start the database
 
     docker compose up -d
 
-    This starts PostgreSQL + PostGIS on port 5433.
-    Make sure Docker Desktop is running first.
+    This starts PostgreSQL + PostGIS on port 5433. Make sure Docker Desktop is running first.
 
 4. Backend
 
@@ -40,6 +75,7 @@ Quick Setup
     uv venv && uv pip install -r requirements.txt
     source .venv/bin/activate
     alembic upgrade head
+    python seed_data.py        # optional: adds demo community reports
     uvicorn app.main:app --reload
 
     Runs on http://localhost:8000
@@ -60,38 +96,81 @@ Quick Setup
 
         NEXT_PUBLIC_GOOGLE_MAPS_API_KEY=ask_ishaan_for_the_key
 
-    Ask the project owner for the key. It is restricted to localhost:3000, so safe to share within the team.
+    Ask the project owner for the key. It is restricted to localhost, so safe to share within the team.
 
     If you prefer to use your own, create one at https://console.cloud.google.com:
         - Enable: Maps JavaScript API, Directions API, Places API
         - Credentials -> Create Credentials -> API Key
-        - Restrict to HTTP referrer http://localhost:3000/*
 
     After adding the key, restart the frontend (Ctrl+C then npm run dev again).
-    The rest of the app (scoring, routes, panels) works without this key.
+
+
+Architecture
+
+    User input (origin, destination, time)
+            |
+            v
+    Next.js frontend  ------>  FastAPI backend  ------>  PostgreSQL + PostGIS
+    (React, Tailwind)           (routing, scoring)        (community reports)
+            ^                           |
+            |                           v
+            +-------- routes --- Scoring engine
+                                        |
+                                        v
+                            Crime + lighting + transport data
+                            (cached JSON, real London sources)
+
+Key architectural decisions:
+
+    - Scoring is a pure function with a stable interface -- the mock engine and
+      the ML engine are hot-swappable via an env var, so the frontend never
+      needs to change when the model improves.
+    - Heatmap grid is computed lazily and cached in memory per time-of-day so
+      the first request is slow but every subsequent request is instant.
+    - Community reports live in PostGIS and are pulled into the scoring
+      engine's cache at the start of every route request, so flagging an
+      unsafe spot immediately affects future route scores.
 
 
 Project Structure
 
     SafeWalk/
-    ├── backend/            FastAPI + PostGIS
+    ├── backend/               FastAPI + PostGIS
     │   ├── app/
-    │   │   ├── main.py         API entry point, CORS, router mounting
-    │   │   ├── config.py       Settings from .env
-    │   │   ├── database.py     SQLAlchemy engine + session
-    │   │   ├── routers/        API endpoints (scoring, routes, reports)
-    │   │   ├── services/       Business logic (scoring engine, route scorer, data loader)
-    │   │   ├── models/         SQLAlchemy models (PostGIS geometry)
-    │   │   ├── schemas/        Pydantic request/response models
-    │   │   └── mock_data/      Sample crime, lighting, and route data
-    │   └── alembic/            Database migrations
-    └── frontend/           Next.js + Tailwind
-        └── src/
-            ├── app/            Pages and layout
-            ├── components/     MapView, RouteForm, RoutePanel, SafetyLegend
-            ├── hooks/          useRoutes
-            ├── lib/            API wrapper, colour utilities
-            └── types/          TypeScript interfaces
+    │   │   ├── main.py           API entry, CORS, router mounting
+    │   │   ├── config.py         Settings from .env
+    │   │   ├── database.py       SQLAlchemy engine + session
+    │   │   ├── routers/          API endpoints
+    │   │   ├── services/         Scoring engine, route scorer, data loader
+    │   │   ├── models/           PostGIS geometry models
+    │   │   ├── schemas/          Pydantic request/response models
+    │   │   ├── data/             Real London data (crime, lighting, transport)
+    │   │   └── mock_data/        Synthetic Clayton data (fallback)
+    │   ├── alembic/              Database migrations
+    │   └── seed_data.py          Demo community reports
+    ├── frontend/              Next.js + Tailwind
+    │   └── src/
+    │       ├── app/              Pages and layout
+    │       ├── components/       MapView, RouteForm, RoutePanel, heatmap, reports
+    │       ├── hooks/            useRoutes, useReports, useHeatmap
+    │       ├── lib/              API wrapper, colour utilities
+    │       └── types/            TypeScript interfaces
+    ├── scripts/
+    │   ├── setup.sh                       One-command setup
+    │   ├── download_london_data.py        Refresh real London data from sources
+    │   └── generate_sample_routes.py      Regenerate road-following sample routes
+    ├── docker-compose.yml        PostGIS container
+    └── .env.example              Config template
+
+
+Tech Stack
+
+    Backend:       Python, FastAPI, SQLAlchemy, GeoAlchemy2, Alembic
+    Frontend:      Next.js 16, React, TypeScript, Tailwind CSS
+    Maps:          Google Maps JavaScript API, Directions API, Places API
+    Database:      PostgreSQL 16 + PostGIS 3.4 (via Docker)
+    Data sources:  data.police.uk (UK crime), OpenStreetMap Overpass API
+    Scoring:       Weighted rule-based engine, swappable with ML model
 
 
 For ML Team
@@ -113,7 +192,7 @@ Setup:
 Scoring endpoint contract (stable -- do not change the interface):
 
     POST /api/score-segment
-    Request:  { "lat": -37.91, "lng": 145.13, "time_of_day": 21 }
+    Request:  { "lat": 51.4572, "lng": -0.19, "time_of_day": 21 }
     Response: { "safety_score": 65, "factors": { ... } }
 
     - safety_score: integer 0-100 (higher = safer)
@@ -137,19 +216,20 @@ Test your endpoint:
 
     curl -X POST http://localhost:8000/api/score-segment \
       -H "Content-Type: application/json" \
-      -d '{"lat": -37.9105, "lng": 145.1340, "time_of_day": 21}'
+      -d '{"lat": 51.4572, "lng": -0.19, "time_of_day": 21}'
 
-Mock data files for reference (in backend/app/mock_data/):
+Real data files to train on (in backend/app/data/):
 
-    - crime_data.json: 200 crime incidents around Monash Clayton
-    - lighting_data.json: 150 street light locations
-    - sample_routes.json: 3 walking routes (campus to station)
+    - crime_data_london.json:     ~9900 UK Police crime incidents (6 months)
+    - lighting_data_london.json:  OpenStreetMap street lamps
+    - transport_data_london.json: Bus stops, train stations, tube entrances
 
 
-Tech Stack
+Future Scope
 
-    - Backend: Python, FastAPI
-    - Frontend: Next.js, React, TypeScript, Tailwind CSS
-    - Maps: Google Maps JavaScript API
-    - Database: PostgreSQL + PostGIS (via Docker)
-    - Scoring: Mock weighted rules (crime density, lighting, time of day), swappable with ML model
+    - Integration with university or campus security systems
+    - Real-time foot traffic from phone density / transit data
+    - Emergency SOS button with auto-location sharing
+    - Council partnerships for lighting improvement data
+    - Expansion to cycling and mobility-aid accessible routes
+    - On-device ML inference for fully offline operation

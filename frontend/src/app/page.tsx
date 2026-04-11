@@ -7,6 +7,7 @@ import RoutePanel from "@/components/RoutePanel";
 import SafetyLegend from "@/components/SafetyLegend";
 import ReportButton from "@/components/ReportButton";
 import ReportModal from "@/components/ReportModal";
+import Spinner from "@/components/Spinner";
 import { useRoutes } from "@/hooks/useRoutes";
 import { useReports } from "@/hooks/useReports";
 import { useHeatmap } from "@/hooks/useHeatmap";
@@ -84,14 +85,15 @@ export default function Home() {
 
             <button
               onClick={() => setHeatmapEnabled((v) => !v)}
-              className={`w-full py-2.5 font-medium rounded-lg transition-colors border ${
+              className={`w-full py-2.5 font-medium rounded-lg transition-colors border flex items-center justify-center gap-2 ${
                 heatmapEnabled
                   ? "bg-orange-500/20 border-orange-500/60 text-orange-300"
                   : "bg-zinc-800 border-zinc-700 text-zinc-300 hover:border-zinc-600"
               }`}
             >
+              {heatmapLoading && <Spinner size={14} />}
               {heatmapLoading
-                ? "Loading heatmap..."
+                ? "Loading heatmap"
                 : heatmapEnabled
                   ? "Hide safety heatmap"
                   : "Show safety heatmap"}

@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Spinner from "./Spinner";
 
 interface RouteFormProps {
   onSubmit: (origin: string, destination: string, timeOfDay: number) => void;
@@ -73,9 +74,10 @@ export default function RouteForm({ onSubmit, loading }: RouteFormProps) {
       <button
         type="submit"
         disabled={loading}
-        className="w-full py-2.5 bg-blue-600 hover:bg-blue-500 disabled:bg-zinc-700 disabled:text-zinc-500 text-white font-medium rounded-lg transition-colors"
+        className="w-full py-2.5 bg-blue-600 hover:bg-blue-500 disabled:bg-zinc-700 disabled:text-zinc-400 text-white font-medium rounded-lg transition-colors flex items-center justify-center gap-2"
       >
-        {loading ? "Finding safe routes..." : "Find Safe Routes"}
+        {loading && <Spinner size={16} />}
+        {loading ? "Finding safe routes" : "Find Safe Routes"}
       </button>
     </form>
   );
