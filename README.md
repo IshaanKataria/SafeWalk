@@ -54,9 +54,20 @@ Quick Setup
     Runs on http://localhost:3000
     API calls proxy to the backend automatically.
 
-    For the map to render, create frontend/.env.local with:
-        NEXT_PUBLIC_GOOGLE_MAPS_API_KEY=your_key_here
+6. Google Maps API key (REQUIRED for the map to render)
 
+    The API key is not stored in the repo. Create a file at frontend/.env.local with:
+
+        NEXT_PUBLIC_GOOGLE_MAPS_API_KEY=ask_ishaan_for_the_key
+
+    Ask the project owner for the key. It is restricted to localhost:3000, so safe to share within the team.
+
+    If you prefer to use your own, create one at https://console.cloud.google.com:
+        - Enable: Maps JavaScript API, Directions API, Places API
+        - Credentials -> Create Credentials -> API Key
+        - Restrict to HTTP referrer http://localhost:3000/*
+
+    After adding the key, restart the frontend (Ctrl+C then npm run dev again).
     The rest of the app (scoring, routes, panels) works without this key.
 
 
