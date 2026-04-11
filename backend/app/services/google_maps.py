@@ -46,11 +46,16 @@ def _parse_google_route(route: dict) -> dict:
 def get_routes(origin: str, destination: str) -> list[dict]:
     """Fetch walking routes between two locations.
 
-    Returns list of route dicts, each with:
-        summary, distance_km, duration_min, waypoints: [{lat, lng}]
+    Priority:
+      1. If a Google Maps API key is configured, call the live Directions API.
+      2. If the key is missing OR the API call fails, fall back to the
+         pre-computed mock routes shipped with the repo.
+
+    USE_MOCK_DATA is informational only — a real key always takes precedence
+    so that user-entered origins/destinations actually resolve to real routes.
     """
-    if settings.use_mock_data or not settings.google_maps_api_key:
-        logger.info("Using mock route data")
+    if not settings.google_maps_api_key:
+        logger.info("No Google Maps API key configured, using mock route data")
         return _load_mock_routes()
 
     try:
@@ -68,9 +73,14 @@ def get_routes(origin: str, destination: str) -> list[dict]:
         data = response.json()
 
         if data.get("status") != "OK":
-            logger.warning("Directions API returned %s, falling back to mock", data.get("status"))
+            logger.warning(
+                "Directions API returned %s (%s), falling back to mock",
+                data.get("status"),
+                data.get("error_message", ""),
+            )
             return _load_mock_routes()
 
+        logger.info("Directions API returned %d routes for %s -> %s", len(data["routes"]), origin, destination)
         return [_parse_google_route(r) for r in data["routes"]]
 
     except Exception:
