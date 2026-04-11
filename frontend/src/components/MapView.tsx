@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import { Map, Polyline, APIProvider, MapMouseEvent } from "@vis.gl/react-google-maps";
 import { CommunityReport, LatLng, ScoredRoute } from "@/types";
 import { scoreToHex } from "@/lib/colors";
@@ -25,6 +26,7 @@ export default function MapView({
   onMapClick,
 }: MapViewProps) {
   const apiKey = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY;
+  const [selectedReportId, setSelectedReportId] = useState<string | null>(null);
 
   if (!apiKey) {
     return (
@@ -35,6 +37,9 @@ export default function MapView({
   }
 
   function handleClick(event: MapMouseEvent) {
+    // Clicking anywhere on the map (not on a marker) dismisses any open popup.
+    setSelectedReportId(null);
+
     if (!reportMode || !event.detail.latLng) return;
     onMapClick({
       lat: event.detail.latLng.lat,
@@ -70,7 +75,11 @@ export default function MapView({
           ));
         })}
 
-        <ReportMarkers reports={reports} />
+        <ReportMarkers
+          reports={reports}
+          selectedId={selectedReportId}
+          onSelect={setSelectedReportId}
+        />
       </Map>
     </APIProvider>
   );
