@@ -1,8 +1,9 @@
 "use client";
 
-import { Map, Polyline, APIProvider } from "@vis.gl/react-google-maps";
-import { ScoredRoute } from "@/types";
+import { Map, Polyline, APIProvider, MapMouseEvent } from "@vis.gl/react-google-maps";
+import { CommunityReport, LatLng, ScoredRoute } from "@/types";
 import { scoreToHex } from "@/lib/colors";
+import ReportMarkers from "./ReportMarkers";
 
 const WANDSWORTH = { lat: 51.45, lng: -0.19 };
 
@@ -10,9 +11,19 @@ interface MapViewProps {
   routes: ScoredRoute[];
   selectedIndex: number;
   onSelectRoute: (index: number) => void;
+  reports: CommunityReport[];
+  reportMode: boolean;
+  onMapClick: (location: LatLng) => void;
 }
 
-export default function MapView({ routes, selectedIndex, onSelectRoute }: MapViewProps) {
+export default function MapView({
+  routes,
+  selectedIndex,
+  onSelectRoute,
+  reports,
+  reportMode,
+  onMapClick,
+}: MapViewProps) {
   const apiKey = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY;
 
   if (!apiKey) {
@@ -23,6 +34,14 @@ export default function MapView({ routes, selectedIndex, onSelectRoute }: MapVie
     );
   }
 
+  function handleClick(event: MapMouseEvent) {
+    if (!reportMode || !event.detail.latLng) return;
+    onMapClick({
+      lat: event.detail.latLng.lat,
+      lng: event.detail.latLng.lng,
+    });
+  }
+
   return (
     <APIProvider apiKey={apiKey}>
       <Map
@@ -31,8 +50,9 @@ export default function MapView({ routes, selectedIndex, onSelectRoute }: MapVie
         mapId="safewalk-map"
         gestureHandling="greedy"
         disableDefaultUI={false}
-        className="w-full h-full"
+        className={`w-full h-full ${reportMode ? "cursor-crosshair" : ""}`}
         colorScheme="DARK"
+        onClick={handleClick}
       >
         {routes.map((route, routeIdx) => {
           const isSelected = routeIdx === selectedIndex;
@@ -49,6 +69,8 @@ export default function MapView({ routes, selectedIndex, onSelectRoute }: MapVie
             />
           ));
         })}
+
+        <ReportMarkers reports={reports} />
       </Map>
     </APIProvider>
   );

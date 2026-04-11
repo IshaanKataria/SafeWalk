@@ -14,7 +14,27 @@ from app.services.data_loader import (
     get_nearby_crimes,
     get_nearby_lights,
     get_nearby_transport,
+    haversine_km,
 )
+
+# --- Community reports cache ---
+# Populated by the routes endpoint before scoring so the engine can apply
+# user-reported safety flags. Keeps the engine side-effect free from the DB.
+_report_cache: list[dict] = []
+
+
+def set_community_reports(reports: list[dict]) -> None:
+    """Refresh the in-memory cache of community reports (lat, lng, category)."""
+    global _report_cache
+    _report_cache = reports
+
+
+def _nearby_reports(lat: float, lng: float, radius_km: float) -> list[dict]:
+    return [
+        r for r in _report_cache
+        if haversine_km(lat, lng, r["lat"], r["lng"]) <= radius_km
+    ]
+
 
 # --- Tunable weights ---
 BASE_SCORE = 85
@@ -35,6 +55,11 @@ MAX_LIGHTING_BONUS = 20
 # Transport: sqrt-scaled. More bus stops and stations = busier = safer.
 TRANSPORT_SQRT_WEIGHT = 3.0
 MAX_TRANSPORT_BONUS = 20
+
+# Community reports: each user-flagged report nearby applies a penalty.
+REPORT_RADIUS_KM = 0.3
+REPORT_PENALTY_PER_REPORT = 6.0
+MAX_REPORT_PENALTY = 25
 
 # Night multipliers — lighting and crime matter more after dark.
 NIGHT_LIGHTING_MULTIPLIER = 2.0
@@ -102,11 +127,23 @@ def score_segment(lat: float, lng: float, time_of_day: int) -> dict:
         MAX_TRANSPORT_BONUS,
     )
 
+    # --- Community reports ---
+    nearby_reports = _nearby_reports(lat, lng, REPORT_RADIUS_KM)
+    report_count = len(nearby_reports)
+    report_penalty = min(report_count * REPORT_PENALTY_PER_REPORT, MAX_REPORT_PENALTY)
+
     # --- Time ---
     time_mod = _time_modifier(hour)
 
     # --- Final ---
-    raw = BASE_SCORE - crime_penalty + lighting_bonus + transport_bonus + time_mod
+    raw = (
+        BASE_SCORE
+        - crime_penalty
+        + lighting_bonus
+        + transport_bonus
+        - report_penalty
+        + time_mod
+    )
     safety_score = max(0, min(100, round(raw)))
 
     return {
@@ -119,6 +156,8 @@ def score_segment(lat: float, lng: float, time_of_day: int) -> dict:
             "lighting_bonus": round(lighting_bonus, 1),
             "transport_count": transport_count,
             "transport_bonus": round(transport_bonus, 1),
+            "report_count": report_count,
+            "report_penalty": round(report_penalty, 1),
             "time_modifier": time_mod,
             "is_dark": dark,
         },

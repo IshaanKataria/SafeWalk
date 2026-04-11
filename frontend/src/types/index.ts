@@ -26,3 +26,21 @@ export interface RouteRequest {
   destination: string;
   time_of_day: number;
 }
+
+export type ReportCategory = "lighting" | "crime" | "harassment" | "other";
+
+export interface CommunityReport {
+  id: string;
+  lat: number;
+  lng: number;
+  category: ReportCategory;
+  description: string | null;
+  created_at: string;
+}
+
+export interface CommunityReportCreate {
+  lat: number;
+  lng: number;
+  category: ReportCategory;
+  description?: string;
+}
