@@ -9,6 +9,7 @@ import ReportButton from "@/components/ReportButton";
 import ReportModal from "@/components/ReportModal";
 import { useRoutes } from "@/hooks/useRoutes";
 import { useReports } from "@/hooks/useReports";
+import { useHeatmap } from "@/hooks/useHeatmap";
 import { LatLng, ReportCategory } from "@/types";
 
 export default function Home() {
@@ -18,11 +19,19 @@ export default function Home() {
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [reportMode, setReportMode] = useState(false);
   const [pendingReport, setPendingReport] = useState<LatLng | null>(null);
+  const [heatmapEnabled, setHeatmapEnabled] = useState(false);
   const [lastSearch, setLastSearch] = useState<{
     origin: string;
     destination: string;
     time: number;
   } | null>(null);
+
+  // Heatmap follows the most recently searched time, defaults to 21:00.
+  const heatmapTime = lastSearch?.time ?? 21;
+  const { points: heatmapPoints, loading: heatmapLoading } = useHeatmap(
+    heatmapEnabled,
+    heatmapTime,
+  );
 
   function handleSearch(origin: string, destination: string, timeOfDay: number) {
     setSelectedIndex(0);
@@ -43,7 +52,6 @@ export default function Home() {
       category,
       description: description || undefined,
     });
-    // Re-run the last search so new reports affect the scoring immediately.
     if (lastSearch) {
       search(lastSearch.origin, lastSearch.destination, lastSearch.time);
     }
@@ -68,10 +76,27 @@ export default function Home() {
             </p>
           )}
 
-          <ReportButton
-            active={reportMode}
-            onToggle={() => setReportMode((m) => !m)}
-          />
+          <div className="space-y-2">
+            <ReportButton
+              active={reportMode}
+              onToggle={() => setReportMode((m) => !m)}
+            />
+
+            <button
+              onClick={() => setHeatmapEnabled((v) => !v)}
+              className={`w-full py-2.5 font-medium rounded-lg transition-colors border ${
+                heatmapEnabled
+                  ? "bg-orange-500/20 border-orange-500/60 text-orange-300"
+                  : "bg-zinc-800 border-zinc-700 text-zinc-300 hover:border-zinc-600"
+              }`}
+            >
+              {heatmapLoading
+                ? "Loading heatmap..."
+                : heatmapEnabled
+                  ? "Hide safety heatmap"
+                  : "Show safety heatmap"}
+            </button>
+          </div>
 
           <RoutePanel
             routes={routes}
@@ -93,6 +118,7 @@ export default function Home() {
           reports={reports}
           reportMode={reportMode}
           onMapClick={handleMapClick}
+          heatmapPoints={heatmapPoints}
         />
 
         {reportMode && (

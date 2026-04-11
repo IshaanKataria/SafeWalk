@@ -2,9 +2,10 @@
 
 import { useState } from "react";
 import { Map, Polyline, APIProvider, MapMouseEvent } from "@vis.gl/react-google-maps";
-import { CommunityReport, LatLng, ScoredRoute } from "@/types";
+import { CommunityReport, HeatmapPoint, LatLng, ScoredRoute } from "@/types";
 import { scoreToHex } from "@/lib/colors";
 import ReportMarkers from "./ReportMarkers";
+import HeatmapLayer from "./HeatmapLayer";
 
 const WANDSWORTH = { lat: 51.45, lng: -0.19 };
 
@@ -15,6 +16,7 @@ interface MapViewProps {
   reports: CommunityReport[];
   reportMode: boolean;
   onMapClick: (location: LatLng) => void;
+  heatmapPoints: HeatmapPoint[] | null;
 }
 
 export default function MapView({
@@ -24,6 +26,7 @@ export default function MapView({
   reports,
   reportMode,
   onMapClick,
+  heatmapPoints,
 }: MapViewProps) {
   const apiKey = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY;
   const [selectedReportId, setSelectedReportId] = useState<string | null>(null);
@@ -48,7 +51,7 @@ export default function MapView({
   }
 
   return (
-    <APIProvider apiKey={apiKey}>
+    <APIProvider apiKey={apiKey} libraries={["visualization"]}>
       <Map
         defaultCenter={WANDSWORTH}
         defaultZoom={15}
@@ -74,6 +77,8 @@ export default function MapView({
             />
           ));
         })}
+
+        {heatmapPoints && <HeatmapLayer points={heatmapPoints} />}
 
         <ReportMarkers
           reports={reports}

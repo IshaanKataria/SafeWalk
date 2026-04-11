@@ -1,4 +1,10 @@
-import { CommunityReport, CommunityReportCreate, RouteRequest, RouteResponse } from "@/types";
+import {
+  CommunityReport,
+  CommunityReportCreate,
+  HeatmapResponse,
+  RouteRequest,
+  RouteResponse,
+} from "@/types";
 
 const API_BASE = "/api";
 
@@ -29,5 +35,11 @@ export async function submitReport(report: CommunityReportCreate): Promise<Commu
     body: JSON.stringify(report),
   });
   if (!res.ok) throw new Error(`Failed to submit report: ${res.status}`);
+  return res.json();
+}
+
+export async function fetchHeatmap(timeOfDay: number): Promise<HeatmapResponse> {
+  const res = await fetch(`${API_BASE}/heatmap?time_of_day=${timeOfDay}`);
+  if (!res.ok) throw new Error(`Failed to fetch heatmap: ${res.status}`);
   return res.json();
 }

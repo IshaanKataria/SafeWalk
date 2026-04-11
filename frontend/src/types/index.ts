@@ -44,3 +44,15 @@ export interface CommunityReportCreate {
   category: ReportCategory;
   description?: string;
 }
+
+export interface HeatmapPoint {
+  lat: number;
+  lng: number;
+  score: number;
+}
+
+export interface HeatmapResponse {
+  points: HeatmapPoint[];
+  time_of_day: number;
+  grid_spacing_m: number;
+}
