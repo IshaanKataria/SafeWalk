@@ -41,7 +41,7 @@ export default function MapView({ routes, selectedIndex, onSelectRoute }: MapVie
           return route.segments.map((seg, segIdx) => (
             <Polyline
               key={`${routeIdx}-${segIdx}`}
-              path={[seg.start, seg.end]}
+              path={seg.path}
               strokeColor={scoreToHex(seg.safety_score)}
               strokeOpacity={dimmed ? 0.25 : 0.9}
               strokeWeight={isSelected ? 6 : 3}

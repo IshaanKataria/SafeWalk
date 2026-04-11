@@ -17,8 +17,7 @@ def get_scored_routes(request: RouteRequest):
 
         segments = [
             ScoredSegment(
-                start=LatLng(**seg["start"]),
-                end=LatLng(**seg["end"]),
+                path=[LatLng(**p) for p in seg["path"]],
                 safety_score=seg["safety_score"],
                 color=seg["color"],
             )

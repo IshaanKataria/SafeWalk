@@ -13,8 +13,7 @@ class LatLng(BaseModel):
 
 
 class ScoredSegment(BaseModel):
-    start: LatLng
-    end: LatLng
+    path: list[LatLng] = Field(description="All polyline points within this segment")
     safety_score: int = Field(ge=0, le=100)
     color: str = Field(description="green | yellow | red")
 

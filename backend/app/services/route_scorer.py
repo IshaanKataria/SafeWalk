@@ -2,6 +2,9 @@
 
 Splits the route into segments, scores each one via the scoring engine,
 classifies colours, and computes an overall route safety score.
+
+Each segment preserves ALL the original polyline points between its
+boundaries so the frontend can render smooth road-following curves.
 """
 
 from app.services.data_loader import haversine_km
@@ -56,8 +59,7 @@ def score_route(waypoints: list[dict], time_of_day: int) -> dict:
         {
             "segments": [
                 {
-                    "start": {lat, lng},
-                    "end": {lat, lng},
+                    "path": [{lat, lng}, ...],   # all points in this segment
                     "safety_score": int,
                     "color": "green" | "yellow" | "red"
                 }
@@ -71,18 +73,23 @@ def score_route(waypoints: list[dict], time_of_day: int) -> dict:
     score_sum = 0
 
     for i in range(len(indices) - 1):
-        start = waypoints[indices[i]]
-        end = waypoints[indices[i + 1]]
+        start_idx = indices[i]
+        end_idx = indices[i + 1]
 
-        # Score at the midpoint of the segment
+        # Preserve every polyline point inside this segment so the
+        # rendered line follows the real road curvature.
+        path = waypoints[start_idx : end_idx + 1]
+
+        # Score at the midpoint of the segment's straight-line span.
+        start = path[0]
+        end = path[-1]
         mid_lat = (start["lat"] + end["lat"]) / 2
         mid_lng = (start["lng"] + end["lng"]) / 2
         result = score_segment(mid_lat, mid_lng, time_of_day)
         safety = result["safety_score"]
 
         segments.append({
-            "start": start,
-            "end": end,
+            "path": path,
             "safety_score": safety,
             "color": _classify_colour(safety),
         })

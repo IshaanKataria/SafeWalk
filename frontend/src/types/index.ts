@@ -4,8 +4,7 @@ export interface LatLng {
 }
 
 export interface ScoredSegment {
-  start: LatLng;
-  end: LatLng;
+  path: LatLng[];
   safety_score: number;
   color: "green" | "yellow" | "red";
 }
