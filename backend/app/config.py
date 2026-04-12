@@ -2,8 +2,9 @@ from pathlib import Path
 
 from pydantic_settings import BaseSettings
 
-# .env lives at the project root (one level above backend/).
-# config.py is at SafeWalk/backend/app/config.py, so three parents up is SafeWalk/.
+# .env lives at the project root for local dev (one level above backend/).
+# In production (Railway, Docker), env vars are injected at runtime and this
+# file does not need to exist.
 _PROJECT_ROOT = Path(__file__).resolve().parent.parent.parent
 _ENV_FILE = _PROJECT_ROOT / ".env"
 
@@ -21,3 +22,8 @@ class Settings(BaseSettings):
 
 
 settings = Settings()
+
+# Railway and some other providers use the legacy `postgres://` scheme.
+# SQLAlchemy 1.4+ wants `postgresql://`. Normalise.
+if settings.database_url.startswith("postgres://"):
+    settings.database_url = settings.database_url.replace("postgres://", "postgresql://", 1)
