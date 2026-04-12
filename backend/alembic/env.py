@@ -1,3 +1,4 @@
+import os
 from logging.config import fileConfig
 
 from sqlalchemy import engine_from_config, pool
@@ -7,6 +8,13 @@ from app.database import Base
 from app.models import community_report, segment_score  # noqa: F401
 
 config = context.config
+
+# Prefer DATABASE_URL from env if set (production). Falls back to alembic.ini.
+_env_url = os.environ.get("DATABASE_URL")
+if _env_url:
+    if _env_url.startswith("postgres://"):
+        _env_url = _env_url.replace("postgres://", "postgresql://", 1)
+    config.set_main_option("sqlalchemy.url", _env_url)
 
 if config.config_file_name is not None:
     fileConfig(config.config_file_name)
