@@ -6,9 +6,9 @@ import MapView from "@/components/MapView";
 import RouteForm from "@/components/RouteForm";
 import RoutePanel from "@/components/RoutePanel";
 import SafetyLegend from "@/components/SafetyLegend";
-import ReportButton from "@/components/ReportButton";
 import ReportModal from "@/components/ReportModal";
 import Spinner from "@/components/Spinner";
+import InfoTooltip from "@/components/InfoTooltip";
 import HeatmapLegend from "@/components/HeatmapLegend";
 import { useRoutes } from "@/hooks/useRoutes";
 import { useReports } from "@/hooks/useReports";
@@ -190,28 +190,32 @@ function HomeInner() {
           )}
 
           <div className="grid grid-cols-2 gap-2">
-            <button
-              onClick={() => setReportMode((m) => !m)}
-              className={`py-2.5 text-[13px] font-medium rounded-2xl transition-all border flex items-center justify-center gap-1.5 ${
-                reportMode
-                  ? "bg-red-500/12 border-red-500/30 text-red-300"
-                  : "bg-[var(--color-sw-surface-3)] border-[var(--color-sw-border)] text-zinc-400 hover:border-[var(--color-sw-border-strong)] hover:text-zinc-300"
-              }`}
-            >
-              {reportMode ? "Cancel" : "Report"}
-            </button>
+            <InfoTooltip text="Flag a location on the map as unsafe. Your report helps other users see community-identified risk areas.">
+              <button
+                onClick={() => setReportMode((m) => !m)}
+                className={`w-full py-2.5 pr-8 text-[13px] font-medium rounded-2xl transition-all border flex items-center justify-center gap-1.5 ${
+                  reportMode
+                    ? "bg-red-500/12 border-red-500/30 text-red-300"
+                    : "bg-[var(--color-sw-surface-3)] border-[var(--color-sw-border)] text-zinc-400 hover:border-[var(--color-sw-border-strong)] hover:text-zinc-300"
+                }`}
+              >
+                {reportMode ? "Cancel" : "Report"}
+              </button>
+            </InfoTooltip>
 
-            <button
-              onClick={() => setHeatmapEnabled((v) => !v)}
-              className={`py-2.5 text-[13px] font-medium rounded-2xl transition-all border flex items-center justify-center gap-1.5 ${
-                heatmapEnabled
-                  ? "bg-[var(--color-sw-green-dim)] border-[var(--color-sw-green)]/30 text-[var(--color-sw-green)]"
-                  : "bg-[var(--color-sw-surface-3)] border-[var(--color-sw-border)] text-zinc-400 hover:border-[var(--color-sw-border-strong)] hover:text-zinc-300"
-              }`}
-            >
-              {heatmapLoading && <Spinner size={12} />}
-              {heatmapEnabled ? "Hide heatmap" : "Heatmap"}
-            </button>
+            <InfoTooltip text="Overlay a colour-coded safety heatmap on the map based on the time of day you searched.">
+              <button
+                onClick={() => setHeatmapEnabled((v) => !v)}
+                className={`w-full py-2.5 pr-8 text-[13px] font-medium rounded-2xl transition-all border flex items-center justify-center gap-1.5 ${
+                  heatmapEnabled
+                    ? "bg-[var(--color-sw-green-dim)] border-[var(--color-sw-green)]/30 text-[var(--color-sw-green)]"
+                    : "bg-[var(--color-sw-surface-3)] border-[var(--color-sw-border)] text-zinc-400 hover:border-[var(--color-sw-border-strong)] hover:text-zinc-300"
+                }`}
+              >
+                {heatmapLoading && <Spinner size={12} />}
+                {heatmapEnabled ? "Hide heatmap" : "Heatmap"}
+              </button>
+            </InfoTooltip>
           </div>
 
           <RoutePanel
