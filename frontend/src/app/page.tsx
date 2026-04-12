@@ -80,16 +80,47 @@ function HomeInner() {
   }
 
   return (
-    <div className="h-full flex">
-      <aside className="w-96 flex-shrink-0 bg-zinc-900 border-r border-zinc-800 flex flex-col">
-        <div className="p-5 border-b border-zinc-800">
-          <h1 className="text-xl font-bold">SafeWalk</h1>
-          <p className="text-sm text-zinc-400 mt-1">
+    <div className="h-full relative md:flex">
+      {/* Map: full-screen behind everything on mobile, normal flex child on desktop */}
+      <main className="absolute inset-0 md:relative md:flex-1 md:order-2">
+        <MapView
+          routes={routes}
+          selectedIndex={selectedIndex}
+          onSelectRoute={setSelectedIndex}
+          reports={reports}
+          reportMode={reportMode}
+          onMapClick={handleMapClick}
+          heatmapPoints={heatmapPoints}
+        />
+
+        {reportMode && (
+          <div className="absolute top-4 left-1/2 -translate-x-1/2 bg-red-500/20 border border-red-500/40 text-red-200 px-4 py-2 rounded-lg text-sm pointer-events-none z-10">
+            Tap the map to flag an unsafe area
+          </div>
+        )}
+      </main>
+
+      {/* Sidebar: bottom sheet on mobile (45% height), left rail on desktop */}
+      <aside
+        className="absolute bottom-0 left-0 right-0 h-[45%] md:relative md:h-full md:w-96 md:flex-shrink-0 md:order-1
+                   bg-zinc-900/95 backdrop-blur-md md:backdrop-blur-none md:bg-zinc-900
+                   border-t border-zinc-800 md:border-t-0 md:border-r
+                   flex flex-col z-20
+                   rounded-t-2xl md:rounded-none shadow-2xl md:shadow-none"
+      >
+        {/* Drag handle visual cue (mobile only) */}
+        <div className="md:hidden flex justify-center pt-2 pb-1">
+          <div className="w-10 h-1 rounded-full bg-zinc-700" />
+        </div>
+
+        <div className="px-4 md:px-5 pt-2 md:pt-5 pb-3 md:pb-5 md:border-b md:border-zinc-800">
+          <h1 className="text-base md:text-xl font-bold">SafeWalk</h1>
+          <p className="hidden md:block text-sm text-zinc-400 mt-1">
             Score any route for safety, any time of day.
           </p>
         </div>
 
-        <div className="p-5 flex-1 overflow-y-auto space-y-6">
+        <div className="px-4 md:px-5 pb-4 md:pb-5 flex-1 overflow-y-auto space-y-4 md:space-y-6">
           <RouteForm onSubmit={handleSearch} loading={loading} />
 
           {error && (
@@ -128,28 +159,10 @@ function HomeInner() {
           />
         </div>
 
-        <div className="p-5 border-t border-zinc-800">
+        <div className="hidden md:block p-5 border-t border-zinc-800">
           <SafetyLegend />
         </div>
       </aside>
-
-      <main className="flex-1 relative">
-        <MapView
-          routes={routes}
-          selectedIndex={selectedIndex}
-          onSelectRoute={setSelectedIndex}
-          reports={reports}
-          reportMode={reportMode}
-          onMapClick={handleMapClick}
-          heatmapPoints={heatmapPoints}
-        />
-
-        {reportMode && (
-          <div className="absolute top-4 left-1/2 -translate-x-1/2 bg-red-500/20 border border-red-500/40 text-red-200 px-4 py-2 rounded-lg text-sm pointer-events-none">
-            Click anywhere on the map to flag it as unsafe
-          </div>
-        )}
-      </main>
 
       <ReportModal
         location={pendingReport}

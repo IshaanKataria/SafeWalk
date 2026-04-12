@@ -61,11 +61,13 @@ export default function RoutePanel({ routes, selectedIndex, onSelectRoute }: Rou
   }
 
   return (
-    <div className="space-y-3 animate-fade-in">
-      <h3 className="text-xs font-semibold text-zinc-500 uppercase tracking-wider">
+    <div className="animate-fade-in">
+      <h3 className="text-xs font-semibold text-zinc-500 uppercase tracking-wider mb-3">
         {routes.length} route{routes.length === 1 ? "" : "s"}
       </h3>
 
+      {/* Horizontal scroll on mobile, vertical stack on desktop */}
+      <div className="flex md:block gap-3 md:gap-0 md:space-y-3 overflow-x-auto md:overflow-x-visible -mx-4 px-4 md:mx-0 md:px-0 snap-x snap-mandatory md:snap-none pb-1">
       {routes.map((route, idx) => {
         const isSelected = idx === selectedIndex;
         const badge = getBadge(idx);
@@ -84,7 +86,7 @@ export default function RoutePanel({ routes, selectedIndex, onSelectRoute }: Rou
                 onSelectRoute(idx);
               }
             }}
-            className={`block w-full text-left p-4 rounded-xl border transition-all cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-500/50 ${
+            className={`flex-shrink-0 w-72 md:w-auto snap-center md:snap-align-none block text-left p-4 rounded-xl border transition-all cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-500/50 ${
               isSelected
                 ? `${scoreToBg(route.overall_score)} border-2 shadow-lg`
                 : "bg-zinc-800/40 border-zinc-800 hover:border-zinc-700 hover:bg-zinc-800/60"
@@ -146,6 +148,7 @@ export default function RoutePanel({ routes, selectedIndex, onSelectRoute }: Rou
           </div>
         );
       })}
+      </div>
     </div>
   );
 }
