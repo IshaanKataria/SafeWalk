@@ -11,6 +11,7 @@ export function useHeatmap(enabled: boolean, timeOfDay: number) {
   useEffect(() => {
     if (!enabled) {
       setPoints(null);
+      setLoading(false);
       return;
     }
 

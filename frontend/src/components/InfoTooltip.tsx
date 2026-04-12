@@ -14,7 +14,7 @@ export default function InfoTooltip({ text, children }: InfoTooltipProps) {
   useEffect(() => {
     if (!showInfo) return;
 
-    function handleClickOutside(e: MouseEvent) {
+    function handleDismiss(e: Event) {
       if (wrapperRef.current && !wrapperRef.current.contains(e.target as Node)) {
         setShowInfo(false);
       }
@@ -24,12 +24,12 @@ export default function InfoTooltip({ text, children }: InfoTooltipProps) {
       if (e.key === "Escape") setShowInfo(false);
     }
 
-    document.addEventListener("mousedown", handleClickOutside);
-    document.addEventListener("touchstart", handleClickOutside as EventListener);
+    document.addEventListener("mousedown", handleDismiss);
+    document.addEventListener("touchstart", handleDismiss);
     document.addEventListener("keydown", handleEscape);
     return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-      document.removeEventListener("touchstart", handleClickOutside as EventListener);
+      document.removeEventListener("mousedown", handleDismiss);
+      document.removeEventListener("touchstart", handleDismiss);
       document.removeEventListener("keydown", handleEscape);
     };
   }, [showInfo]);
@@ -55,9 +55,9 @@ export default function InfoTooltip({ text, children }: InfoTooltipProps) {
 
       {showInfo && (
         <div
-          className="absolute bottom-full right-0 mb-2 w-56 z-50
+          className="absolute bottom-full left-0 mb-2 w-52 z-[60]
                      bg-[var(--color-sw-surface-2)] border border-[var(--color-sw-border)]
-                     rounded-xl p-3 shadow-xl"
+                     rounded-xl p-3 shadow-[0_8px_30px_-4px_rgba(0,0,0,0.7)]"
         >
           <p className="text-[12px] text-zinc-300 leading-relaxed">{text}</p>
           <div

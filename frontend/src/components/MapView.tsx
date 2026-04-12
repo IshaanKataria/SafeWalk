@@ -43,7 +43,12 @@ export default function MapView({
         bounds.extend({ lat: p.lat, lng: p.lng });
       }
     }
-    map.fitBounds(bounds, { top: 60, right: 40, bottom: 80, left: 40 });
+
+    // On mobile, the bottom sheet covers ~35% of the screen in "peek" state.
+    // Add extra bottom padding so the route isn't hidden behind the sheet.
+    const isMobile = typeof window !== "undefined" && window.innerWidth < 768;
+    const bottomPad = isMobile ? Math.round(window.innerHeight * 0.37) : 80;
+    map.fitBounds(bounds, { top: 60, right: 40, bottom: bottomPad, left: 40 });
   }, [map, routes, selectedIndex]);
 
   function handleClick(event: MapMouseEvent) {

@@ -35,15 +35,16 @@ export default function Home() {
   );
 }
 
-type SheetState = "collapsed" | "default" | "expanded";
+type SheetState = "collapsed" | "peek" | "default" | "expanded";
 
 const SHEET_HEIGHT_CLASSES: Record<SheetState, string> = {
   collapsed: "h-14",
+  peek: "h-[35%]",
   default: "h-[45%]",
   expanded: "h-[90%]",
 };
 
-const SHEET_ORDER: SheetState[] = ["collapsed", "default", "expanded"];
+const SHEET_ORDER: SheetState[] = ["collapsed", "peek", "default", "expanded"];
 
 function nextStateForDelta(current: SheetState, delta: number): SheetState {
   if (Math.abs(delta) < 30) return current; // ignore micro-swipes
@@ -63,6 +64,7 @@ function HomeInner() {
   const [heatmapEnabled, setHeatmapEnabled] = useState(false);
   const [sheetState, setSheetState] = useState<SheetState>("default");
   const touchStartY = useRef<number | null>(null);
+  const sheetContentRef = useRef<HTMLDivElement>(null);
   const [lastSearch, setLastSearch] = useState<{
     origin: string;
     destination: string;
@@ -100,9 +102,13 @@ function HomeInner() {
     setSelectedIndex(0);
     setLastSearch({ origin, destination, time: timeOfDay });
     search(origin, destination, timeOfDay);
-    // On mobile, collapse the sheet so the map is fully visible while routes render.
+    // On mobile, show the "peek" state so routes + map are visible simultaneously.
+    // Scroll the sheet content to show route cards after a short delay.
     if (typeof window !== "undefined" && window.innerWidth < 768) {
-      setSheetState("collapsed");
+      setSheetState("peek");
+      setTimeout(() => {
+        sheetContentRef.current?.scrollTo({ top: sheetContentRef.current.scrollHeight, behavior: "smooth" });
+      }, 600);
     }
   }
 
@@ -184,7 +190,7 @@ function HomeInner() {
           </p>
         </div>
 
-        <div className="px-5 md:px-6 pb-4 md:pb-6 flex-1 overflow-y-auto space-y-4 md:space-y-5">
+        <div ref={sheetContentRef} className="px-5 md:px-6 pb-4 md:pb-6 flex-1 overflow-y-auto space-y-4 md:space-y-5">
           <RouteForm onSubmit={handleSearch} loading={loading} />
 
           {error && (
