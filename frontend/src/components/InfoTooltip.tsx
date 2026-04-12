@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 interface InfoTooltipProps {
   text: string;
@@ -9,9 +9,33 @@ interface InfoTooltipProps {
 
 export default function InfoTooltip({ text, children }: InfoTooltipProps) {
   const [showInfo, setShowInfo] = useState(false);
+  const wrapperRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!showInfo) return;
+
+    function handleClickOutside(e: MouseEvent) {
+      if (wrapperRef.current && !wrapperRef.current.contains(e.target as Node)) {
+        setShowInfo(false);
+      }
+    }
+
+    function handleEscape(e: KeyboardEvent) {
+      if (e.key === "Escape") setShowInfo(false);
+    }
+
+    document.addEventListener("mousedown", handleClickOutside);
+    document.addEventListener("touchstart", handleClickOutside as EventListener);
+    document.addEventListener("keydown", handleEscape);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+      document.removeEventListener("touchstart", handleClickOutside as EventListener);
+      document.removeEventListener("keydown", handleEscape);
+    };
+  }, [showInfo]);
 
   return (
-    <div className="relative">
+    <div className="relative" ref={wrapperRef}>
       {children}
 
       <button
@@ -34,7 +58,6 @@ export default function InfoTooltip({ text, children }: InfoTooltipProps) {
           className="absolute bottom-full right-0 mb-2 w-56 z-50
                      bg-[var(--color-sw-surface-2)] border border-[var(--color-sw-border)]
                      rounded-xl p-3 shadow-xl"
-          onClick={() => setShowInfo(false)}
         >
           <p className="text-[12px] text-zinc-300 leading-relaxed">{text}</p>
           <div
