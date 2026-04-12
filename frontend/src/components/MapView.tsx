@@ -1,7 +1,7 @@
 "use client";
 
-import { useState } from "react";
-import { Map, Polyline, MapMouseEvent } from "@vis.gl/react-google-maps";
+import { useEffect, useState } from "react";
+import { Map, Polyline, MapMouseEvent, useMap } from "@vis.gl/react-google-maps";
 import { CommunityReport, HeatmapPoint, LatLng, ScoredRoute } from "@/types";
 import { scoreToHex } from "@/lib/colors";
 import ReportMarkers from "./ReportMarkers";
@@ -29,6 +29,22 @@ export default function MapView({
   heatmapPoints,
 }: MapViewProps) {
   const [selectedReportId, setSelectedReportId] = useState<string | null>(null);
+  const map = useMap();
+
+  // Fit the map to show the entire selected route when routes change.
+  useEffect(() => {
+    if (!map || routes.length === 0) return;
+    const route = routes[selectedIndex] ?? routes[0];
+    if (!route.segments.length) return;
+
+    const bounds = new google.maps.LatLngBounds();
+    for (const seg of route.segments) {
+      for (const p of seg.path) {
+        bounds.extend({ lat: p.lat, lng: p.lng });
+      }
+    }
+    map.fitBounds(bounds, { top: 60, right: 40, bottom: 80, left: 40 });
+  }, [map, routes, selectedIndex]);
 
   function handleClick(event: MapMouseEvent) {
     // Clicking anywhere on the map (not on a marker) dismisses any open popup.

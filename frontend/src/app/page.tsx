@@ -100,6 +100,10 @@ function HomeInner() {
     setSelectedIndex(0);
     setLastSearch({ origin, destination, time: timeOfDay });
     search(origin, destination, timeOfDay);
+    // On mobile, collapse the sheet so the map is fully visible while routes render.
+    if (typeof window !== "undefined" && window.innerWidth < 768) {
+      setSheetState("collapsed");
+    }
   }
 
   function handleMapClick(location: LatLng) {
