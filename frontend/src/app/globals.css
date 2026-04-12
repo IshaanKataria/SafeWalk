@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@import "mapbox-gl/dist/mapbox-gl.css";
 
 @theme inline {
   --font-sans: var(--font-geist-sans);
@@ -26,6 +27,54 @@ body {
 
 .animate-fade-in {
   animation: fade-in 0.35s ease-out both;
+}
+
+/* Mapbox popup — dark theme override.
+   Mapbox ships with !important-ish specificity on its own popup styles, so
+   we need equal weight + !important to win reliably. */
+.mapboxgl-popup-content {
+  background-color: #18181b !important;
+  color: #fafafa !important;
+  border: 1px solid #27272a !important;
+  border-radius: 0.75rem !important;
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.6) !important;
+  padding: 14px 16px !important;
+}
+
+.mapboxgl-popup-anchor-top .mapboxgl-popup-tip,
+.mapboxgl-popup-anchor-top-left .mapboxgl-popup-tip,
+.mapboxgl-popup-anchor-top-right .mapboxgl-popup-tip {
+  border-bottom-color: #18181b !important;
+}
+
+.mapboxgl-popup-anchor-bottom .mapboxgl-popup-tip,
+.mapboxgl-popup-anchor-bottom-left .mapboxgl-popup-tip,
+.mapboxgl-popup-anchor-bottom-right .mapboxgl-popup-tip {
+  border-top-color: #18181b !important;
+}
+
+.mapboxgl-popup-anchor-left .mapboxgl-popup-tip {
+  border-right-color: #18181b !important;
+}
+
+.mapboxgl-popup-anchor-right .mapboxgl-popup-tip {
+  border-left-color: #18181b !important;
+}
+
+.mapboxgl-popup-close-button {
+  display: none !important;
+}
+
+/* Mapbox ctrl buttons against dark theme */
+.mapboxgl-ctrl-bottom-right .mapboxgl-ctrl-attrib,
+.mapboxgl-ctrl-bottom-left .mapboxgl-ctrl-attrib {
+  background-color: rgba(24, 24, 27, 0.8);
+  color: #a1a1aa;
+}
+
+.mapboxgl-ctrl-bottom-right .mapboxgl-ctrl-attrib a,
+.mapboxgl-ctrl-bottom-left .mapboxgl-ctrl-attrib a {
+  color: #d4d4d8;
 }
 
 /* Google Places Autocomplete dropdown — dark theme override.

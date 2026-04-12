@@ -1,13 +1,16 @@
 "use client";
 
-import { useState } from "react";
-import { Map, Polyline, MapMouseEvent } from "@vis.gl/react-google-maps";
+import { useMemo, useState } from "react";
+import { Map, Source, Layer } from "react-map-gl/mapbox";
+import type { MapMouseEvent, LineLayerSpecification } from "react-map-gl/mapbox";
+import type { FeatureCollection } from "geojson";
 import { CommunityReport, HeatmapPoint, LatLng, ScoredRoute } from "@/types";
 import { scoreToHex } from "@/lib/colors";
 import ReportMarkers from "./ReportMarkers";
 import HeatmapLayer from "./HeatmapLayer";
 
 const BARNET = { lat: 51.58, lng: -0.205 };
+const MAPBOX_STYLE = "mapbox://styles/mapbox/dark-v11";
 
 interface MapViewProps {
   routes: ScoredRoute[];
@@ -28,45 +31,98 @@ export default function MapView({
   onMapClick,
   heatmapPoints,
 }: MapViewProps) {
+  const token = process.env.NEXT_PUBLIC_MAPBOX_TOKEN;
   const [selectedReportId, setSelectedReportId] = useState<string | null>(null);
 
+  // Build one GeoJSON FeatureCollection from every segment in every route.
+  // Each feature carries colour + selected state + route index as properties
+  // so a single line layer can data-drive paint per feature.
+  const routesGeoJSON = useMemo<FeatureCollection>(() => {
+    const features = routes.flatMap((route, routeIdx) =>
+      route.segments.map((seg, segIdx) => ({
+        type: "Feature" as const,
+        id: routeIdx * 10000 + segIdx,
+        properties: {
+          color: scoreToHex(seg.safety_score),
+          selected: routeIdx === selectedIndex ? 1 : 0,
+          routeIdx,
+        },
+        geometry: {
+          type: "LineString" as const,
+          coordinates: seg.path.map((p) => [p.lng, p.lat]),
+        },
+      })),
+    );
+    return { type: "FeatureCollection", features };
+  }, [routes, selectedIndex]);
+
+  if (!token) {
+    return (
+      <div className="flex-1 flex items-center justify-center bg-zinc-900 text-zinc-400">
+        <p>Set NEXT_PUBLIC_MAPBOX_TOKEN in frontend/.env.local to load the map.</p>
+      </div>
+    );
+  }
+
   function handleClick(event: MapMouseEvent) {
-    // Clicking anywhere on the map (not on a marker) dismisses any open popup.
+    // Clicking the map (not a marker) dismisses any open report popup.
     setSelectedReportId(null);
 
-    if (!reportMode || !event.detail.latLng) return;
-    onMapClick({
-      lat: event.detail.latLng.lat,
-      lng: event.detail.latLng.lng,
-    });
+    // In report mode, any map click creates a report at that location.
+    if (reportMode) {
+      onMapClick({ lat: event.lngLat.lat, lng: event.lngLat.lng });
+      return;
+    }
+
+    // Route click detection: query the rendered features under the cursor.
+    const feature = event.features?.find((f) => f.layer?.id === "routes-line");
+    if (feature && typeof feature.properties?.routeIdx === "number") {
+      onSelectRoute(feature.properties.routeIdx);
+    }
   }
+
+  const lineLayer: LineLayerSpecification = {
+    id: "routes-line",
+    type: "line",
+    source: "routes-source",
+    layout: {
+      "line-cap": "round",
+      "line-join": "round",
+    },
+    paint: {
+      "line-color": ["get", "color"],
+      "line-width": [
+        "case",
+        ["==", ["get", "selected"], 1],
+        6,
+        3,
+      ],
+      "line-opacity": [
+        "case",
+        ["==", ["get", "selected"], 1],
+        0.95,
+        0.35,
+      ],
+    },
+  };
 
   return (
     <Map
-      defaultCenter={BARNET}
-      defaultZoom={14}
-      mapId="safewalk-map"
-      gestureHandling="greedy"
-      disableDefaultUI={false}
-      className={`w-full h-full ${reportMode ? "cursor-crosshair" : ""}`}
-      colorScheme="DARK"
+      mapboxAccessToken={token}
+      mapStyle={MAPBOX_STYLE}
+      initialViewState={{
+        longitude: BARNET.lng,
+        latitude: BARNET.lat,
+        zoom: 13,
+      }}
+      style={{ width: "100%", height: "100%" }}
+      cursor={reportMode ? "crosshair" : "auto"}
       onClick={handleClick}
+      interactiveLayerIds={["routes-line"]}
     >
-      {routes.map((route, routeIdx) => {
-        const isSelected = routeIdx === selectedIndex;
-        const dimmed = !isSelected && routes.length > 0;
-
-        return route.segments.map((seg, segIdx) => (
-          <Polyline
-            key={`${routeIdx}-${segIdx}`}
-            path={seg.path}
-            strokeColor={scoreToHex(seg.safety_score)}
-            strokeOpacity={dimmed ? 0.25 : 0.9}
-            strokeWeight={isSelected ? 6 : 3}
-            onClick={() => onSelectRoute(routeIdx)}
-          />
-        ));
-      })}
+      <Source id="routes-source" type="geojson" data={routesGeoJSON}>
+        <Layer {...lineLayer} />
+      </Source>
 
       {heatmapPoints && <HeatmapLayer points={heatmapPoints} />}
 

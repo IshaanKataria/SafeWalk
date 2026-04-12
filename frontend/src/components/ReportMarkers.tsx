@@ -1,6 +1,6 @@
 "use client";
 
-import { AdvancedMarker, InfoWindow, Pin } from "@vis.gl/react-google-maps";
+import { Marker, Popup } from "react-map-gl/mapbox";
 import { CommunityReport, ReportCategory } from "@/types";
 
 interface ReportMarkersProps {
@@ -24,7 +24,6 @@ const CATEGORY_STYLE: Record<
   other:      { bg: "#64748b", border: "#1e293b", glyph: "?", label: "Other" },
 };
 
-
 function formatDate(iso: string): string {
   const date = new Date(iso);
   return date.toLocaleString(undefined, {
@@ -36,7 +35,6 @@ function formatDate(iso: string): string {
   });
 }
 
-
 export default function ReportMarkers({ reports, selectedId, onSelect }: ReportMarkersProps) {
   const selected = reports.find((r) => r.id === selectedId) ?? null;
 
@@ -45,35 +43,46 @@ export default function ReportMarkers({ reports, selectedId, onSelect }: ReportM
       {reports.map((report) => {
         const style = CATEGORY_STYLE[report.category];
         return (
-          <AdvancedMarker
+          <Marker
             key={report.id}
-            position={{ lat: report.lat, lng: report.lng }}
-            title={style.label}
-            onClick={() => onSelect(report.id)}
+            longitude={report.lng}
+            latitude={report.lat}
+            anchor="bottom"
+            onClick={(e) => {
+              // Stop the map click handler from firing and clearing the popup.
+              e.originalEvent.stopPropagation();
+              onSelect(report.id);
+            }}
           >
-            <Pin
-              background={style.bg}
-              borderColor={style.border}
-              glyphColor="#ffffff"
-              glyph={style.glyph}
-            />
-          </AdvancedMarker>
+            <div
+              title={style.label}
+              className="flex items-center justify-center w-8 h-8 rounded-full border-2 cursor-pointer shadow-lg hover:scale-110 transition-transform"
+              style={{ backgroundColor: style.bg, borderColor: style.border }}
+            >
+              <span className="text-white font-bold text-sm select-none">{style.glyph}</span>
+            </div>
+          </Marker>
         );
       })}
 
       {selected && (
-        <InfoWindow
-          position={{ lat: selected.lat, lng: selected.lng }}
-          pixelOffset={[0, -40]}
-          onCloseClick={() => onSelect(null)}
-          headerDisabled
+        <Popup
+          longitude={selected.lng}
+          latitude={selected.lat}
+          anchor="bottom"
+          offset={36}
+          onClose={() => onSelect(null)}
+          closeButton={false}
+          closeOnClick={false}
+          className="safewalk-popup"
+          maxWidth="280px"
         >
-          <div className="min-w-[240px] max-w-[280px] text-zinc-900 relative pr-5">
+          <div className="min-w-[240px] max-w-[280px] text-zinc-100 relative pr-5">
             <button
               type="button"
               onClick={() => onSelect(null)}
               aria-label="Close"
-              className="absolute top-0 right-0 w-5 h-5 flex items-center justify-center text-zinc-500 hover:text-zinc-900 text-lg leading-none"
+              className="absolute top-0 right-0 w-5 h-5 flex items-center justify-center text-zinc-400 hover:text-white text-lg leading-none"
             >
               ×
             </button>
@@ -92,18 +101,18 @@ export default function ReportMarkers({ reports, selectedId, onSelect }: ReportM
             </div>
 
             {selected.description && (
-              <p className="text-sm text-zinc-800 mb-2">{selected.description}</p>
+              <p className="text-sm text-zinc-200 mb-2">{selected.description}</p>
             )}
 
-            <div className="border-t border-zinc-200 pt-2 mt-2">
-              <p className="text-[11px] text-zinc-500 leading-tight">
+            <div className="border-t border-zinc-800 pt-2 mt-2">
+              <p className="text-[11px] text-zinc-400 leading-tight">
                 Reduces nearby route scores within <b>{REPORT_RADIUS_METRES}m</b> by{" "}
                 <b>{REPORT_PENALTY_PER_REPORT}</b> points per report (up to{" "}
                 <b>{MAX_REPORT_PENALTY}</b> max).
               </p>
             </div>
           </div>
-        </InfoWindow>
+        </Popup>
       )}
     </>
   );

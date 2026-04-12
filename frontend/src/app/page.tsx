@@ -14,7 +14,9 @@ import { useReports } from "@/hooks/useReports";
 import { useHeatmap } from "@/hooks/useHeatmap";
 import { LatLng, ReportCategory } from "@/types";
 
-const MAPS_LIBRARIES: ("visualization" | "places")[] = ["visualization", "places"];
+// Google Maps JS is only loaded for the Places Autocomplete in the form.
+// Rendering (base map, routes, heatmap, markers) is handled by Mapbox GL.
+const MAPS_LIBRARIES: "places"[] = ["places"];
 
 export default function Home() {
   const apiKey = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY;
