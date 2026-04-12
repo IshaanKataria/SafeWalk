@@ -3,6 +3,7 @@
 import { useMemo } from "react";
 import { ScoredRoute } from "@/types";
 import { scoreToBg, scoreToText, scoreToLabel, scoreToHex } from "@/lib/colors";
+import { buildWalkingNavUrl } from "@/lib/gmaps";
 
 interface RoutePanelProps {
   routes: ScoredRoute[];
@@ -23,6 +24,19 @@ const BADGE_LABELS: Record<Exclude<BadgeKind, null>, string> = {
   safest:      "Safest",
   fastest:     "Fastest",
 };
+
+
+function getRouteEndpoints(route: ScoredRoute) {
+  if (route.segments.length === 0) return null;
+  const first = route.segments[0];
+  const last = route.segments[route.segments.length - 1];
+  if (first.path.length === 0 || last.path.length === 0) return null;
+  return {
+    origin: first.path[0],
+    destination: last.path[last.path.length - 1],
+  };
+}
+
 
 export default function RoutePanel({ routes, selectedIndex, onSelectRoute }: RoutePanelProps) {
   const { safestIdx, fastestIdx } = useMemo(() => {
@@ -55,12 +69,22 @@ export default function RoutePanel({ routes, selectedIndex, onSelectRoute }: Rou
       {routes.map((route, idx) => {
         const isSelected = idx === selectedIndex;
         const badge = getBadge(idx);
+        const endpoints = getRouteEndpoints(route);
+        const navUrl = endpoints ? buildWalkingNavUrl(endpoints.origin, endpoints.destination) : null;
 
         return (
-          <button
+          <div
             key={idx}
+            role="button"
+            tabIndex={0}
             onClick={() => onSelectRoute(idx)}
-            className={`w-full text-left p-4 rounded-xl border transition-all ${
+            onKeyDown={(e) => {
+              if (e.key === "Enter" || e.key === " ") {
+                e.preventDefault();
+                onSelectRoute(idx);
+              }
+            }}
+            className={`block w-full text-left p-4 rounded-xl border transition-all cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-500/50 ${
               isSelected
                 ? `${scoreToBg(route.overall_score)} border-2 shadow-lg`
                 : "bg-zinc-800/40 border-zinc-800 hover:border-zinc-700 hover:bg-zinc-800/60"
@@ -95,7 +119,7 @@ export default function RoutePanel({ routes, selectedIndex, onSelectRoute }: Rou
               </div>
             </div>
 
-            <div className="flex gap-[2px] h-2 rounded-full overflow-hidden bg-zinc-950/50">
+            <div className="flex gap-[2px] h-2 rounded-full overflow-hidden bg-zinc-950/50 mb-3">
               {route.segments.map((seg, segIdx) => (
                 <div
                   key={segIdx}
@@ -104,7 +128,22 @@ export default function RoutePanel({ routes, selectedIndex, onSelectRoute }: Rou
                 />
               ))}
             </div>
-          </button>
+
+            {navUrl && (
+              <div className="flex justify-end">
+                <a
+                  href={navUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  onClick={(e) => e.stopPropagation()}
+                  className="inline-flex items-center gap-1 text-xs text-blue-400 hover:text-blue-300 bg-blue-500/10 hover:bg-blue-500/20 px-2.5 py-1 rounded-full transition-colors"
+                >
+                  Navigate
+                  <span aria-hidden="true">→</span>
+                </a>
+              </div>
+            )}
+          </div>
         );
       })}
     </div>
