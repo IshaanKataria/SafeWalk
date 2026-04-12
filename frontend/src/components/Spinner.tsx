@@ -18,11 +18,11 @@ export default function Spinner({ size = 16, className = "" }: SpinnerProps) {
         r="10"
         stroke="currentColor"
         strokeWidth="3"
-        strokeOpacity="0.25"
+        strokeOpacity="0.15"
       />
       <path
         d="M12 2a10 10 0 0 1 10 10"
-        stroke="currentColor"
+        stroke="#22c55e"
         strokeWidth="3"
         strokeLinecap="round"
       />

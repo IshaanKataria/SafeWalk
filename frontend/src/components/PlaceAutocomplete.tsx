@@ -55,14 +55,17 @@ export default function PlaceAutocomplete({
 
   return (
     <div>
-      <label className="block text-sm text-zinc-400 mb-1">{label}</label>
+      <label className="block text-[12px] font-medium text-zinc-500 uppercase tracking-wider mb-1.5">{label}</label>
       <input
         ref={inputRef}
         type="text"
         value={value}
         onChange={(e) => onChange(e.target.value)}
         placeholder={placeholder}
-        className="w-full px-3 py-2 bg-zinc-800 border border-zinc-700 rounded-lg text-white placeholder-zinc-500 focus:outline-none focus:border-blue-500"
+        className="w-full px-4 py-2.5 bg-[var(--color-sw-surface-3)] border border-[var(--color-sw-border)]
+                   rounded-xl text-[14px] text-white placeholder-zinc-600
+                   focus:outline-none focus:border-[var(--color-sw-green)]/40 focus:ring-1 focus:ring-[var(--color-sw-green)]/20
+                   transition-all"
       />
     </div>
   );

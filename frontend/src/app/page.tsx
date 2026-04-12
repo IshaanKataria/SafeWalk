@@ -9,6 +9,7 @@ import SafetyLegend from "@/components/SafetyLegend";
 import ReportButton from "@/components/ReportButton";
 import ReportModal from "@/components/ReportModal";
 import Spinner from "@/components/Spinner";
+import HeatmapLegend from "@/components/HeatmapLegend";
 import { useRoutes } from "@/hooks/useRoutes";
 import { useReports } from "@/hooks/useReports";
 import { useHeatmap } from "@/hooks/useHeatmap";
@@ -140,70 +141,76 @@ function HomeInner() {
         )}
       </main>
 
-      {/* Sidebar: bottom sheet on mobile (snap-state height), left rail on desktop */}
+      {/* Sidebar: bottom sheet on mobile, left rail on desktop */}
       <aside
         data-sheet-state={sheetState}
-        className={`absolute bottom-0 left-0 right-0 ${SHEET_HEIGHT_CLASSES[sheetState]} md:relative md:!h-full md:w-96 md:flex-shrink-0 md:order-1
-                   bg-zinc-900/95 backdrop-blur-md md:backdrop-blur-none md:bg-zinc-900
-                   border-t border-zinc-800 md:border-t-0 md:border-r
+        className={`absolute bottom-0 left-0 right-0 ${SHEET_HEIGHT_CLASSES[sheetState]} md:relative md:!h-full md:w-[400px] md:flex-shrink-0 md:order-1
+                   bg-[var(--color-sw-surface-1)]/95 backdrop-blur-xl md:backdrop-blur-none md:bg-[var(--color-sw-surface-1)]
+                   border-t border-[var(--color-sw-border)] md:border-t-0 md:border-r
                    flex flex-col z-20
-                   rounded-t-2xl md:rounded-none shadow-2xl md:shadow-none
+                   rounded-t-3xl md:rounded-none
+                   shadow-[0_-8px_40px_-12px_rgba(0,0,0,0.7)] md:shadow-none
                    transition-[height] duration-300 ease-out`}
       >
-        {/* Drag handle (mobile only). Touch + tap both update sheetState. */}
+        {/* Drag handle (mobile only) */}
         <div
           data-sheet-handle
           onTouchStart={handleSheetTouchStart}
           onTouchEnd={handleSheetTouchEnd}
           onClick={cycleSheetOnTap}
-          className="md:hidden flex flex-col items-center pt-2 pb-2 cursor-grab active:cursor-grabbing select-none"
+          className="md:hidden flex flex-col items-center pt-3 pb-2 cursor-grab active:cursor-grabbing select-none"
           role="button"
           aria-label="Drag to resize panel"
         >
-          <div className="w-10 h-1 rounded-full bg-zinc-600" />
+          <div className="w-12 h-1.5 rounded-full bg-white/20" />
         </div>
 
         <div
           data-sheet-header
           onTouchStart={handleSheetTouchStart}
           onTouchEnd={handleSheetTouchEnd}
-          className="px-4 md:px-5 pt-1 md:pt-5 pb-3 md:pb-5 md:border-b md:border-zinc-800 select-none"
+          className="px-5 md:px-6 pt-1 md:pt-6 pb-3 md:pb-5 md:border-b md:border-[var(--color-sw-border)] select-none"
         >
-          <h1 className="text-base md:text-xl font-bold">SafeWalk</h1>
-          <p className="hidden md:block text-sm text-zinc-400 mt-1">
-            Score any route for safety, any time of day.
+          <div className="flex items-center gap-2">
+            <div className="w-2 h-2 rounded-full bg-[var(--color-sw-green)] shadow-[0_0_8px_var(--color-sw-green-glow)]" />
+            <h1 className="text-base md:text-lg font-semibold tracking-tight">SafeWalk</h1>
+          </div>
+          <p className="hidden md:block text-[13px] text-zinc-500 mt-1.5">
+            Score any walking route for safety.
           </p>
         </div>
 
-        <div className="px-4 md:px-5 pb-4 md:pb-5 flex-1 overflow-y-auto space-y-4 md:space-y-6">
+        <div className="px-5 md:px-6 pb-4 md:pb-6 flex-1 overflow-y-auto space-y-4 md:space-y-5">
           <RouteForm onSubmit={handleSearch} loading={loading} />
 
           {error && (
-            <p className="text-sm text-red-400 bg-red-500/10 p-3 rounded-lg">
+            <p className="text-[13px] text-red-400 bg-red-500/8 border border-red-500/15 p-3 rounded-2xl">
               {error}
             </p>
           )}
 
-          <div className="space-y-2">
-            <ReportButton
-              active={reportMode}
-              onToggle={() => setReportMode((m) => !m)}
-            />
+          <div className="grid grid-cols-2 gap-2">
+            <button
+              onClick={() => setReportMode((m) => !m)}
+              className={`py-2.5 text-[13px] font-medium rounded-2xl transition-all border flex items-center justify-center gap-1.5 ${
+                reportMode
+                  ? "bg-red-500/12 border-red-500/30 text-red-300"
+                  : "bg-[var(--color-sw-surface-3)] border-[var(--color-sw-border)] text-zinc-400 hover:border-[var(--color-sw-border-strong)] hover:text-zinc-300"
+              }`}
+            >
+              {reportMode ? "Cancel" : "Report"}
+            </button>
 
             <button
               onClick={() => setHeatmapEnabled((v) => !v)}
-              className={`w-full py-2.5 font-medium rounded-lg transition-colors border flex items-center justify-center gap-2 ${
+              className={`py-2.5 text-[13px] font-medium rounded-2xl transition-all border flex items-center justify-center gap-1.5 ${
                 heatmapEnabled
-                  ? "bg-orange-500/20 border-orange-500/60 text-orange-300"
-                  : "bg-zinc-800 border-zinc-700 text-zinc-300 hover:border-zinc-600"
+                  ? "bg-[var(--color-sw-green-dim)] border-[var(--color-sw-green)]/30 text-[var(--color-sw-green)]"
+                  : "bg-[var(--color-sw-surface-3)] border-[var(--color-sw-border)] text-zinc-400 hover:border-[var(--color-sw-border-strong)] hover:text-zinc-300"
               }`}
             >
-              {heatmapLoading && <Spinner size={14} />}
-              {heatmapLoading
-                ? "Loading heatmap"
-                : heatmapEnabled
-                  ? "Hide safety heatmap"
-                  : "Show safety heatmap"}
+              {heatmapLoading && <Spinner size={12} />}
+              {heatmapEnabled ? "Hide heatmap" : "Heatmap"}
             </button>
           </div>
 
@@ -214,8 +221,9 @@ function HomeInner() {
           />
         </div>
 
-        <div className="hidden md:block p-5 border-t border-zinc-800">
+        <div className="hidden md:block px-6 py-4 border-t border-[var(--color-sw-border)] space-y-3">
           <SafetyLegend />
+          <HeatmapLegend visible={heatmapEnabled} />
         </div>
       </aside>
 
