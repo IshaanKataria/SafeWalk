@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { APIProvider } from "@vis.gl/react-google-maps";
 import MapView from "@/components/MapView";
 import RouteForm from "@/components/RouteForm";
@@ -34,6 +34,24 @@ export default function Home() {
   );
 }
 
+type SheetState = "collapsed" | "default" | "expanded";
+
+const SHEET_HEIGHT_CLASSES: Record<SheetState, string> = {
+  collapsed: "h-14",
+  default: "h-[45%]",
+  expanded: "h-[90%]",
+};
+
+const SHEET_ORDER: SheetState[] = ["collapsed", "default", "expanded"];
+
+function nextStateForDelta(current: SheetState, delta: number): SheetState {
+  if (Math.abs(delta) < 30) return current; // ignore micro-swipes
+  const idx = SHEET_ORDER.indexOf(current);
+  // Negative delta = swipe up = expand
+  if (delta < 0) return SHEET_ORDER[Math.min(idx + 1, SHEET_ORDER.length - 1)];
+  return SHEET_ORDER[Math.max(idx - 1, 0)];
+}
+
 function HomeInner() {
   const { routes, loading, error, search } = useRoutes();
   const { reports, create: createReport } = useReports();
@@ -42,11 +60,33 @@ function HomeInner() {
   const [reportMode, setReportMode] = useState(false);
   const [pendingReport, setPendingReport] = useState<LatLng | null>(null);
   const [heatmapEnabled, setHeatmapEnabled] = useState(false);
+  const [sheetState, setSheetState] = useState<SheetState>("default");
+  const touchStartY = useRef<number | null>(null);
   const [lastSearch, setLastSearch] = useState<{
     origin: string;
     destination: string;
     time: number;
   } | null>(null);
+
+  function handleSheetTouchStart(e: React.TouchEvent) {
+    touchStartY.current = e.touches[0].clientY;
+  }
+
+  function handleSheetTouchEnd(e: React.TouchEvent) {
+    if (touchStartY.current === null) return;
+    const endY = e.changedTouches[0].clientY;
+    const delta = endY - touchStartY.current;
+    setSheetState((prev) => nextStateForDelta(prev, delta));
+    touchStartY.current = null;
+  }
+
+  function cycleSheetOnTap() {
+    // Tap on handle also cycles through states for non-touch / fallback
+    setSheetState((prev) => {
+      const idx = SHEET_ORDER.indexOf(prev);
+      return SHEET_ORDER[(idx + 1) % SHEET_ORDER.length];
+    });
+  }
 
   // Heatmap follows the most recently searched time, defaults to 21:00.
   const heatmapTime = lastSearch?.time ?? 21;
@@ -100,20 +140,35 @@ function HomeInner() {
         )}
       </main>
 
-      {/* Sidebar: bottom sheet on mobile (45% height), left rail on desktop */}
+      {/* Sidebar: bottom sheet on mobile (snap-state height), left rail on desktop */}
       <aside
-        className="absolute bottom-0 left-0 right-0 h-[45%] md:relative md:h-full md:w-96 md:flex-shrink-0 md:order-1
+        data-sheet-state={sheetState}
+        className={`absolute bottom-0 left-0 right-0 ${SHEET_HEIGHT_CLASSES[sheetState]} md:relative md:!h-full md:w-96 md:flex-shrink-0 md:order-1
                    bg-zinc-900/95 backdrop-blur-md md:backdrop-blur-none md:bg-zinc-900
                    border-t border-zinc-800 md:border-t-0 md:border-r
                    flex flex-col z-20
-                   rounded-t-2xl md:rounded-none shadow-2xl md:shadow-none"
+                   rounded-t-2xl md:rounded-none shadow-2xl md:shadow-none
+                   transition-[height] duration-300 ease-out`}
       >
-        {/* Drag handle visual cue (mobile only) */}
-        <div className="md:hidden flex justify-center pt-2 pb-1">
-          <div className="w-10 h-1 rounded-full bg-zinc-700" />
+        {/* Drag handle (mobile only). Touch + tap both update sheetState. */}
+        <div
+          data-sheet-handle
+          onTouchStart={handleSheetTouchStart}
+          onTouchEnd={handleSheetTouchEnd}
+          onClick={cycleSheetOnTap}
+          className="md:hidden flex flex-col items-center pt-2 pb-2 cursor-grab active:cursor-grabbing select-none"
+          role="button"
+          aria-label="Drag to resize panel"
+        >
+          <div className="w-10 h-1 rounded-full bg-zinc-600" />
         </div>
 
-        <div className="px-4 md:px-5 pt-2 md:pt-5 pb-3 md:pb-5 md:border-b md:border-zinc-800">
+        <div
+          data-sheet-header
+          onTouchStart={handleSheetTouchStart}
+          onTouchEnd={handleSheetTouchEnd}
+          className="px-4 md:px-5 pt-1 md:pt-5 pb-3 md:pb-5 md:border-b md:border-zinc-800 select-none"
+        >
           <h1 className="text-base md:text-xl font-bold">SafeWalk</h1>
           <p className="hidden md:block text-sm text-zinc-400 mt-1">
             Score any route for safety, any time of day.
